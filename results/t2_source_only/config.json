@@ -1,0 +1,23 @@
+{
+  "batch_size_per_domain": 8,
+  "ckpt_root": "checkpoints",
+  "crop_size": 224,
+  "data_root": "/kaggle/input/datasets/mbh2006/pacs-dataset01/pacs",
+  "early_stop_patience": 5,
+  "max_epochs": 30,
+  "method": "source_only",
+  "num_classes": 7,
+  "num_workers": 2,
+  "optimizer": {
+    "lr": 0.0001,
+    "name": "adamw",
+    "weight_decay": 0.0001
+  },
+  "out_root": "results",
+  "resize_size": 256,
+  "seed": 6304,
+  "splits": "shared/splits/pacs_sketch_seed6304.json",
+  "target_batch_size": 24,
+  "target_domain": "sketch",
+  "train_frac": 0.8
+}

@@ -1,0 +1,29 @@
+{
+  "run_id": "t2_dan",
+  "method": "dan",
+  "seed": 6304,
+  "config_hash": "9135816721",
+  "best_mean_source_f1": 0.951473478663908,
+  "best_row": {
+    "epoch": 6,
+    "train_loss": 0.19427824761737045,
+    "train_cls_loss": 0.07754183302526894,
+    "train_mmd": 0.11673641412412349,
+    "train_dom_loss": null,
+    "train_dom_acc": null,
+    "train_alpha": null,
+    "val_mean_acc": 0.9528063279992119,
+    "val_mean_f1": 0.951473478663908,
+    "epoch_time_s": 39.358983755111694,
+    "val_photo_acc": 0.9762611275964391,
+    "val_photo_f1": 0.9718624477487221,
+    "val_art_painting_acc": 0.9416058394160584,
+    "val_art_painting_f1": 0.9418974719551947,
+    "val_cartoon_acc": 0.940552016985138,
+    "val_cartoon_f1": 0.9406605162878071
+  },
+  "epochs_ran": 11,
+  "steps_per_epoch": 201,
+  "device": "cuda",
+  "best_checkpoint": "checkpoints/t2_dan/best.pt"
+}

@@ -1,0 +1,445 @@
+{
+  "run_id": "t2_cdan",
+  "method": "cdan",
+  "seed": 6304,
+  "checkpoint": "checkpoints/t2_cdan/best.pt",
+  "source_validation": {
+    "photo": {
+      "accuracy": 0.973293768545994,
+      "macro_f1": 0.9674514991181659,
+      "per_class_accuracy": [
+        0.9736842105263158,
+        0.926829268292683,
+        0.9459459459459459,
+        0.9736842105263158,
+        0.95,
+        1.0,
+        1.0
+      ],
+      "confusion_matrix": [
+        [
+          37,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          3,
+          38,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          35,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          37,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          0,
+          0,
+          38,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          56,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          87
+        ]
+      ],
+      "num_samples": 337
+    },
+    "art_painting": {
+      "accuracy": 0.878345498783455,
+      "macro_f1": 0.8763343763399591,
+      "per_class_accuracy": [
+        0.868421052631579,
+        0.8823529411764706,
+        0.9649122807017544,
+        0.8378378378378378,
+        0.8292682926829268,
+        0.9661016949152542,
+        0.8111111111111111
+      ],
+      "confusion_matrix": [
+        [
+          66,
+          4,
+          4,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          45,
+          0,
+          0,
+          4,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          55,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          2,
+          31,
+          3,
+          1,
+          0
+        ],
+        [
+          2,
+          2,
+          3,
+          0,
+          34,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          1,
+          57,
+          0
+        ],
+        [
+          8,
+          3,
+          2,
+          0,
+          3,
+          1,
+          73
+        ]
+      ],
+      "num_samples": 411
+    },
+    "cartoon": {
+      "accuracy": 0.9320594479830149,
+      "macro_f1": 0.9366995899721103,
+      "per_class_accuracy": [
+        0.8974358974358975,
+        0.9782608695652174,
+        0.9714285714285714,
+        0.9629629629629629,
+        0.8615384615384616,
+        0.9827586206896551,
+        0.8888888888888888
+      ],
+      "confusion_matrix": [
+        [
+          70,
+          3,
+          2,
+          0,
+          3,
+          0,
+          0
+        ],
+        [
+          1,
+          90,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          68,
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          26,
+          0,
+          0,
+          0
+        ],
+        [
+          3,
+          1,
+          5,
+          0,
+          56,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0,
+          57,
+          0
+        ],
+        [
+          6,
+          0,
+          3,
+          0,
+          0,
+          0,
+          72
+        ]
+      ],
+      "num_samples": 471
+    }
+  },
+  "target": {
+    "accuracy": 0.31560193433443623,
+    "macro_f1": 0.4316114077726457,
+    "per_class_accuracy": [
+      0.08937823834196891,
+      0.008108108108108109,
+      0.36254980079681276,
+      0.6710526315789473,
+      0.29901960784313725,
+      1.0,
+      1.0
+    ],
+    "confusion_matrix": [
+      [
+        69,
+        0,
+        3,
+        0,
+        18,
+        2,
+        680
+      ],
+      [
+        40,
+        6,
+        1,
+        0,
+        2,
+        1,
+        690
+      ],
+      [
+        10,
+        0,
+        273,
+        0,
+        14,
+        1,
+        455
+      ],
+      [
+        0,
+        0,
+        7,
+        408,
+        0,
+        1,
+        192
+      ],
+      [
+        14,
+        0,
+        7,
+        0,
+        244,
+        0,
+        551
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        80,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        160
+      ]
+    ],
+    "num_samples": 3929
+  },
+  "target_per_class": [
+    {
+      "class": "dog",
+      "support": 772,
+      "correct": 69,
+      "accuracy": 0.08937823834196891
+    },
+    {
+      "class": "elephant",
+      "support": 740,
+      "correct": 6,
+      "accuracy": 0.008108108108108109
+    },
+    {
+      "class": "giraffe",
+      "support": 753,
+      "correct": 273,
+      "accuracy": 0.36254980079681276
+    },
+    {
+      "class": "guitar",
+      "support": 608,
+      "correct": 408,
+      "accuracy": 0.6710526315789473
+    },
+    {
+      "class": "horse",
+      "support": 816,
+      "correct": 244,
+      "accuracy": 0.29901960784313725
+    },
+    {
+      "class": "house",
+      "support": 80,
+      "correct": 80,
+      "accuracy": 1.0
+    },
+    {
+      "class": "person",
+      "support": 160,
+      "correct": 160,
+      "accuracy": 1.0
+    }
+  ],
+  "target_top_confusions": [
+    {
+      "true_class": "elephant",
+      "predicted_class": "person",
+      "count": 690,
+      "share_of_true_class": 0.9324324324324325
+    },
+    {
+      "true_class": "dog",
+      "predicted_class": "person",
+      "count": 680,
+      "share_of_true_class": 0.8808290155440415
+    },
+    {
+      "true_class": "horse",
+      "predicted_class": "person",
+      "count": 551,
+      "share_of_true_class": 0.6752450980392157
+    },
+    {
+      "true_class": "giraffe",
+      "predicted_class": "person",
+      "count": 455,
+      "share_of_true_class": 0.6042496679946879
+    },
+    {
+      "true_class": "guitar",
+      "predicted_class": "person",
+      "count": 192,
+      "share_of_true_class": 0.3157894736842105
+    },
+    {
+      "true_class": "elephant",
+      "predicted_class": "dog",
+      "count": 40,
+      "share_of_true_class": 0.05405405405405406
+    },
+    {
+      "true_class": "dog",
+      "predicted_class": "horse",
+      "count": 18,
+      "share_of_true_class": 0.023316062176165803
+    },
+    {
+      "true_class": "giraffe",
+      "predicted_class": "horse",
+      "count": 14,
+      "share_of_true_class": 0.01859229747675963
+    },
+    {
+      "true_class": "horse",
+      "predicted_class": "dog",
+      "count": 14,
+      "share_of_true_class": 0.01715686274509804
+    },
+    {
+      "true_class": "giraffe",
+      "predicted_class": "dog",
+      "count": 10,
+      "share_of_true_class": 0.013280212483399735
+    },
+    {
+      "true_class": "guitar",
+      "predicted_class": "giraffe",
+      "count": 7,
+      "share_of_true_class": 0.011513157894736841
+    },
+    {
+      "true_class": "horse",
+      "predicted_class": "giraffe",
+      "count": 7,
+      "share_of_true_class": 0.00857843137254902
+    }
+  ],
+  "target_accuracy_change_vs_baseline": -0.3591244591499109,
+  "target_macro_f1_change_vs_baseline": -0.22621300184242132,
+  "baseline_run_id": "t2_source_only"
+}

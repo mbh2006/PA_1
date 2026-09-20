@@ -1,0 +1,29 @@
+{
+  "run_id": "t2_cdan",
+  "method": "cdan",
+  "seed": 6304,
+  "config_hash": "027d85392c",
+  "best_mean_source_f1": 0.9268284884767451,
+  "best_row": {
+    "epoch": 4,
+    "train_loss": 0.7989485406163913,
+    "train_cls_loss": 0.14339009632613622,
+    "train_mmd": null,
+    "train_dom_loss": 0.6555584425949932,
+    "train_dom_acc": 0.5891192934999419,
+    "train_alpha": null,
+    "val_mean_acc": 0.9278995717708213,
+    "val_mean_f1": 0.9268284884767451,
+    "epoch_time_s": 39.89781403541565,
+    "val_photo_acc": 0.973293768545994,
+    "val_photo_f1": 0.9674514991181659,
+    "val_art_painting_acc": 0.878345498783455,
+    "val_art_painting_f1": 0.8763343763399591,
+    "val_cartoon_acc": 0.9320594479830149,
+    "val_cartoon_f1": 0.9366995899721103
+  },
+  "epochs_ran": 9,
+  "steps_per_epoch": 201,
+  "device": "cuda",
+  "best_checkpoint": "checkpoints/t2_cdan/best.pt"
+}
