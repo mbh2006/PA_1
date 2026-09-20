@@ -3,6 +3,7 @@ data/
 checkpoints/
 checkpoints_smoke/
 results_smoke/
+kaggle_outputs/
 *.pth
 *.pt
 
