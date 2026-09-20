@@ -1,0 +1,17 @@
+{
+  "id": "mbh2006/pa1-diag",
+  "title": "pa1 diag",
+  "code_file": "main.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_internet": true,
+  "dataset_sources": [
+    "mbh2006/pa1-t4-vanilla-ckpt",
+    "mbh2006/pa1-t4-vanilla-cache"
+  ],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}

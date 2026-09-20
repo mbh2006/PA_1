@@ -118,13 +118,22 @@ def clone_and_install():
     return commit
 
 
+def find_dataset(slug):
+    for pattern in [f"/kaggle/input/{slug}", f"/kaggle/input/*/{slug}",
+                    f"/kaggle/input/*/*/{slug}", f"/kaggle/input/*/*/*/{slug}"]:
+        for candidate in glob.glob(pattern):
+            if os.path.isdir(candidate):
+                return candidate
+    return None
+
+
 def copy_baseline_results():
-    if BASELINE_RUN and os.path.isdir(BASELINE_RESULTS_DATASET):
+    source = find_dataset("pa1-t2-erm-results")
+    if BASELINE_RUN and source:
         destination = os.path.join("results", BASELINE_RUN)
         os.makedirs(destination, exist_ok=True)
-        for filename in os.listdir(BASELINE_RESULTS_DATASET):
-            shutil.copy2(os.path.join(BASELINE_RESULTS_DATASET, filename),
-                         os.path.join(destination, filename))
+        for filename in os.listdir(source):
+            shutil.copy2(os.path.join(source, filename), os.path.join(destination, filename))
         print("copied baseline results into", destination, flush=True)
 
 
@@ -265,12 +274,24 @@ def clone_and_install():
 
 def find_dir(name, sentinel):
     patterns = [f"/kaggle/input/{{name}}", f"/kaggle/input/*/{{name}}",
-                f"/kaggle/input/*/*/{{name}}", f"/kaggle/input/*/*/*/{{name}}"]
+                f"/kaggle/input/*/*/{{name}}", f"/kaggle/input/*/*/*/{{name}}",
+                f"/kaggle/input/*/*/*/*/{{name}}"]
     for pattern in patterns:
         for candidate in glob.glob(pattern):
             if os.path.exists(os.path.join(candidate, sentinel)):
                 return candidate
     raise SystemExit(f"dataset folder {{name}} (with {{sentinel}}) not found under /kaggle/input")
+
+
+def find_asset(name):
+    patterns = [f"/kaggle/input/{{name}}", f"/kaggle/input/*/{{name}}",
+                f"/kaggle/input/*/*/{{name}}", f"/kaggle/input/*/*/*/{{name}}",
+                f"/kaggle/input/*/*/*/*/{{name}}"]
+    for pattern in patterns:
+        hits = [path for path in glob.glob(pattern) if os.path.isfile(path)]
+        if hits:
+            return hits[0]
+    raise SystemExit(f"asset {{name!r}} not found under /kaggle/input")
 
 
 def copy_cifar():
@@ -302,14 +323,11 @@ TASK4_VANILLA_BODY = '''run([sys.executable, "-m", "task4.train", "--config", "t
     shutil.make_archive("/kaggle/working/results_t4_vanilla", "zip", "results", "t4_vanilla")
     shutil.make_archive("/kaggle/working/checkpoint_t4_vanilla", "zip", "checkpoints", "t4_vanilla")'''
 
-TASK4_REST_BODY = '''# vanilla checkpoint + cache arrive as private datasets
+TASK4_REST_BODY = '''# vanilla checkpoint + cache arrive as private datasets (mount layout agnostic)
     os.makedirs("checkpoints/t4_vanilla", exist_ok=True)
-    for name in os.listdir("/kaggle/input/pa1-t4-vanilla-ckpt"):
-        if name.endswith(".pt"):
-            shutil.copy2(os.path.join("/kaggle/input/pa1-t4-vanilla-ckpt", name),
-                         os.path.join("checkpoints/t4_vanilla", name))
+    shutil.copy2(find_asset("best.pt"), "checkpoints/t4_vanilla/best.pt")
     os.makedirs("task4/cache", exist_ok=True)
-    shutil.copy2("/kaggle/input/pa1-t4-vanilla-cache/t4_vanilla.npz", "task4/cache/t4_vanilla.npz")
+    shutil.copy2(find_asset("t4_vanilla.npz"), "task4/cache/t4_vanilla.npz")
 
     run([sys.executable, "-m", "task4.train", "--config", "task4/configs/gcsc.yaml",
          "--data-root", "data", "--run-id", "t4_gcsc", "--num-workers", "2"])
@@ -385,8 +403,14 @@ def pipeline():
         run(["git", "clone", REPO_URL, REPO_DIR])
     os.chdir(REPO_DIR)
     log_status("installing dependencies")
-    run([sys.executable, "-m", "pip", "install", "-q", "pyyaml", "scikit-learn",
-         "tqdm", "open_clip_torch"])
+    run([sys.executable, "-m", "pip", "install", "-q", "pyyaml", "scikit-learn", "tqdm"])
+    # Validated on Kaggle: installing open_clip with dependencies can drag in a
+    # new torch/CUDA stack and kill the session; --no-deps plus the pure-python
+    # dependencies is stable and fast.
+    run([sys.executable, "-m", "pip", "install", "-q", "--no-deps", "open_clip_torch"])
+    run([sys.executable, "-m", "pip", "install", "-q", "--no-deps",
+         "ftfy", "regex", "timm", "safetensors", "huggingface_hub"])
+    run([sys.executable, "-c", "import open_clip; print('open_clip', open_clip.__version__)"])
 
     stl = find_dir("stl10_binary", "train_X.bin")
     os.makedirs("data/stl10", exist_ok=True)
