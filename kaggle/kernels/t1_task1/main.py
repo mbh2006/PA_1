@@ -51,8 +51,14 @@ def pipeline():
         run(["git", "clone", REPO_URL, REPO_DIR])
     os.chdir(REPO_DIR)
     log_status("installing dependencies")
-    run([sys.executable, "-m", "pip", "install", "-q", "pyyaml", "scikit-learn",
-         "tqdm", "open_clip_torch"])
+    run([sys.executable, "-m", "pip", "install", "-q", "pyyaml", "scikit-learn", "tqdm"])
+    # Validated on Kaggle: installing open_clip with dependencies can drag in a
+    # new torch/CUDA stack and kill the session; --no-deps plus the pure-python
+    # dependencies is stable and fast.
+    run([sys.executable, "-m", "pip", "install", "-q", "--no-deps", "open_clip_torch"])
+    run([sys.executable, "-m", "pip", "install", "-q", "--no-deps",
+         "ftfy", "regex", "timm", "safetensors", "huggingface_hub"])
+    run([sys.executable, "-c", "import open_clip; print('open_clip', open_clip.__version__)"])
 
     stl = find_dir("stl10_binary", "train_X.bin")
     os.makedirs("data/stl10", exist_ok=True)

@@ -29,12 +29,24 @@ def clone_and_install():
 
 def find_dir(name, sentinel):
     patterns = [f"/kaggle/input/{name}", f"/kaggle/input/*/{name}",
-                f"/kaggle/input/*/*/{name}", f"/kaggle/input/*/*/*/{name}"]
+                f"/kaggle/input/*/*/{name}", f"/kaggle/input/*/*/*/{name}",
+                f"/kaggle/input/*/*/*/*/{name}"]
     for pattern in patterns:
         for candidate in glob.glob(pattern):
             if os.path.exists(os.path.join(candidate, sentinel)):
                 return candidate
     raise SystemExit(f"dataset folder {name} (with {sentinel}) not found under /kaggle/input")
+
+
+def find_asset(name):
+    patterns = [f"/kaggle/input/{name}", f"/kaggle/input/*/{name}",
+                f"/kaggle/input/*/*/{name}", f"/kaggle/input/*/*/*/{name}",
+                f"/kaggle/input/*/*/*/*/{name}"]
+    for pattern in patterns:
+        hits = [path for path in glob.glob(pattern) if os.path.isfile(path)]
+        if hits:
+            return hits[0]
+    raise SystemExit(f"asset {name!r} not found under /kaggle/input")
 
 
 def copy_cifar():

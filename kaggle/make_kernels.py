@@ -119,8 +119,8 @@ def clone_and_install():
 
 
 def find_dataset(slug):
-    for pattern in [f"/kaggle/input/{slug}", f"/kaggle/input/*/{slug}",
-                    f"/kaggle/input/*/*/{slug}", f"/kaggle/input/*/*/*/{slug}"]:
+    for pattern in [f"/kaggle/input/{{slug}}", f"/kaggle/input/*/{{slug}}",
+                    f"/kaggle/input/*/*/{{slug}}", f"/kaggle/input/*/*/*/{{slug}}"]:
         for candidate in glob.glob(pattern):
             if os.path.isdir(candidate):
                 return candidate

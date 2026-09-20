@@ -50,13 +50,22 @@ def clone_and_install():
     return commit
 
 
+def find_dataset(slug):
+    for pattern in [f"/kaggle/input/{slug}", f"/kaggle/input/*/{slug}",
+                    f"/kaggle/input/*/*/{slug}", f"/kaggle/input/*/*/*/{slug}"]:
+        for candidate in glob.glob(pattern):
+            if os.path.isdir(candidate):
+                return candidate
+    return None
+
+
 def copy_baseline_results():
-    if BASELINE_RUN and os.path.isdir(BASELINE_RESULTS_DATASET):
+    source = find_dataset("pa1-t2-erm-results")
+    if BASELINE_RUN and source:
         destination = os.path.join("results", BASELINE_RUN)
         os.makedirs(destination, exist_ok=True)
-        for filename in os.listdir(BASELINE_RESULTS_DATASET):
-            shutil.copy2(os.path.join(BASELINE_RESULTS_DATASET, filename),
-                         os.path.join(destination, filename))
+        for filename in os.listdir(source):
+            shutil.copy2(os.path.join(source, filename), os.path.join(destination, filename))
         print("copied baseline results into", destination, flush=True)
 
 

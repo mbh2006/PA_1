@@ -29,12 +29,24 @@ def clone_and_install():
 
 def find_dir(name, sentinel):
     patterns = [f"/kaggle/input/{name}", f"/kaggle/input/*/{name}",
-                f"/kaggle/input/*/*/{name}", f"/kaggle/input/*/*/*/{name}"]
+                f"/kaggle/input/*/*/{name}", f"/kaggle/input/*/*/*/{name}",
+                f"/kaggle/input/*/*/*/*/{name}"]
     for pattern in patterns:
         for candidate in glob.glob(pattern):
             if os.path.exists(os.path.join(candidate, sentinel)):
                 return candidate
     raise SystemExit(f"dataset folder {name} (with {sentinel}) not found under /kaggle/input")
+
+
+def find_asset(name):
+    patterns = [f"/kaggle/input/{name}", f"/kaggle/input/*/{name}",
+                f"/kaggle/input/*/*/{name}", f"/kaggle/input/*/*/*/{name}",
+                f"/kaggle/input/*/*/*/*/{name}"]
+    for pattern in patterns:
+        hits = [path for path in glob.glob(pattern) if os.path.isfile(path)]
+        if hits:
+            return hits[0]
+    raise SystemExit(f"asset {name!r} not found under /kaggle/input")
 
 
 def copy_cifar():
@@ -50,14 +62,11 @@ def main():
     subprocess.run(["nvidia-smi", "-L"])
     clone_and_install()
     copy_cifar()
-    # vanilla checkpoint + cache arrive as private datasets
+    # vanilla checkpoint + cache arrive as private datasets (mount layout agnostic)
     os.makedirs("checkpoints/t4_vanilla", exist_ok=True)
-    for name in os.listdir("/kaggle/input/pa1-t4-vanilla-ckpt"):
-        if name.endswith(".pt"):
-            shutil.copy2(os.path.join("/kaggle/input/pa1-t4-vanilla-ckpt", name),
-                         os.path.join("checkpoints/t4_vanilla", name))
+    shutil.copy2(find_asset("best.pt"), "checkpoints/t4_vanilla/best.pt")
     os.makedirs("task4/cache", exist_ok=True)
-    shutil.copy2("/kaggle/input/pa1-t4-vanilla-cache/t4_vanilla.npz", "task4/cache/t4_vanilla.npz")
+    shutil.copy2(find_asset("t4_vanilla.npz"), "task4/cache/t4_vanilla.npz")
 
     run([sys.executable, "-m", "task4.train", "--config", "task4/configs/gcsc.yaml",
          "--data-root", "data", "--run-id", "t4_gcsc", "--num-workers", "2"])
