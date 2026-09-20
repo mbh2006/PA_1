@@ -28,6 +28,21 @@ USER = "mbh2006"
 DONE_STATES = {"KernelWorkerStatus.COMPLETE", "KernelWorkerStatus.ERROR",
                "KernelWorkerStatus.CANCELLED", "KernelWorkerStatus.CANCEL_ACKNOWLEDGED"}
 
+# The Kaggle CLI emits non-ASCII progress characters; cp1252 consoles crash on
+# them, so force UTF-8 on this process and on every child.
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
+
+def kaggle_env() -> dict:
+    env = os.environ.copy()
+    env["PYTHONIOENCODING"] = "utf-8"
+    env.setdefault("PYTHONUTF8", "1")
+    return env
+
 
 def kaggle_cli() -> str:
     """Prefer the CLI next to the current interpreter (it may not be on PATH)."""
@@ -44,12 +59,14 @@ def push(name: str) -> None:
     folder = KERNELS_DIR / name
     if not folder.is_dir():
         sys.exit(f"kernel folder not found: {folder}")
-    subprocess.run([kaggle_cli(), "kernels", "push", "-p", str(folder)], check=True)
+    subprocess.run([kaggle_cli(), "kernels", "push", "-p", str(folder)],
+                   check=True, env=kaggle_env())
 
 
 def status(name: str) -> str:
     completed = subprocess.run([kaggle_cli(), "kernels", "status", kernel_id(name)],
-                               capture_output=True, text=True, check=True)
+                               capture_output=True, encoding="utf-8", errors="replace",
+                               env=kaggle_env(), check=True)
     text = completed.stdout.strip()
     print(text)
     return text.split('"')[1] if '"' in text else text
@@ -70,7 +87,8 @@ def watch(name: str, interval: int = 30, timeout_min: int = 240) -> None:
 def pull(name: str) -> Path:
     target = OUTPUTS_DIR / name
     target.mkdir(parents=True, exist_ok=True)
-    subprocess.run([kaggle_cli(), "kernels", "output", kernel_id(name), "-p", str(target)], check=True)
+    subprocess.run([kaggle_cli(), "kernels", "output", kernel_id(name), "-p", str(target)],
+                   check=True, env=kaggle_env())
     return target
 
 

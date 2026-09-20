@@ -22,7 +22,7 @@ conflict_pairs:
   - [horse, monkey]
   - [ship, truck]
   - [bird, monkey]
-conflict_per_direction: 25
+conflict_per_direction: 55
 conflict_steps: 150
 
 conflicts_dir: task1/data/cue_conflicts

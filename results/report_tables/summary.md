@@ -16,8 +16,8 @@
 
 | method | run | source_mean_accuracy | source_mean_macro_f1 | source_worst_macro_f1 | target_accuracy | target_macro_f1 | source_domain_separability | sharpness_delta | source_photo_macro_f1 | source_art_painting_macro_f1 | source_cartoon_macro_f1 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| ERM | t2_source_only | None | None | None | 0.6747 | 0.6578 | None | None | 0.9706 | 0.8970 | 0.9449 |
-| DAN-DG | t3_dan_dg | 0.9183 | 0.9123 | 0.8926 | 0.7137 | 0.7048 | 0.6776 | 134.2253 | 0.9285 | 0.8926 | 0.9159 |
+| ERM | t2_source_only | None | None | None | 0.6747 | 0.6578 | 0.8618 | 0.2726 | 0.9706 | 0.8970 | 0.9449 |
+| DAN-DG | t3_dan_dg | 0.9183 | 0.9123 | 0.8926 | 0.7137 | 0.7048 | 0.6776 | 134.2262 | 0.9285 | 0.8926 | 0.9159 |
 | SAM | t3_sam | 0.9589 | 0.9583 | 0.9372 | 0.7137 | 0.7301 | 0.8553 | 0.1662 | 0.9707 | 0.9372 | 0.9671 |
 | t3_sam_rho001 (study) | t3_sam_rho001 | 0.9492 | 0.9458 | 0.9305 | 0.6747 | 0.7098 | 0.8520 | 0.2163 |  |  |  |
 | t3_sam_rho01 (study) | t3_sam_rho01 | 0.9411 | 0.9389 | 0.9173 | 0.7035 | 0.7111 | 0.8158 | 0.1180 |  |  |  |

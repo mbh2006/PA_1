@@ -32,15 +32,16 @@ def state_of(name: str) -> str:
 def pull(name: str, retries: int = 3) -> bool:
     target = OUTPUTS_DIR / name
     target.mkdir(parents=True, exist_ok=True)
+    from scripts.kaggle_push import kaggle_env
     for attempt in range(1, retries + 1):
         completed = subprocess.run(
             [kaggle_cli(), "kernels", "output", kernel_id(name), "-p", str(target)],
-            capture_output=True, text=True)
+            capture_output=True, encoding="utf-8", errors="replace", env=kaggle_env())
         if completed.returncode == 0:
             print(f"  pulled {name} -> {target}", flush=True)
             return True
-        print(f"  pull attempt {attempt} failed for {name}: "
-              f"{(completed.stderr or completed.stdout or '').strip()[-200:]}", flush=True)
+        message = ((completed.stderr or "") + (completed.stdout or "")).strip()[-200:]
+        print(f"  pull attempt {attempt} failed for {name}: {message}", flush=True)
         time.sleep(30)
     return False
 

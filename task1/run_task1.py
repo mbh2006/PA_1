@@ -303,6 +303,20 @@ def stage_analysis(cfg, args, subsets) -> None:
                 metrics_zero["consistency"] = prediction_consistency(zero_clean, zero_shot)
                 report["conditions"][condition][f"{name}_zero_shot"] = metrics_zero
 
+        # clean baseline row (the reference for every intervention comparison)
+        clean_logits = _head_logits(cfg, name, clean_features, device)
+        clean_metrics = classification_metrics(clean_logits, clean_labels, num_classes)
+        clean_metrics["consistency"] = 1.0
+        report["conditions"].setdefault("clean", {})[name] = clean_metrics
+        report["stability"].setdefault("clean", {})[name] = {"cosine_clean_vs_transformed": 1.0}
+        if clip_data is not None and name == "clip_vit_b32":
+            text = clip_data["text_features"]
+            scale = float(clip_data["scale"])
+            zero_clean = scale * (clean_features @ text.T)
+            metrics_zero = classification_metrics(zero_clean, clean_labels, num_classes)
+            metrics_zero["consistency"] = 1.0
+            report["conditions"]["clean"][f"{name}_zero_shot"] = metrics_zero
+
         # translation curve: average over directions
         for pixels in TRANSLATION_DISPLACEMENTS:
             if pixels == 0:
