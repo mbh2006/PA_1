@@ -24,6 +24,11 @@ class DANDG(ERM):
         dan_cfg = cfg.get("dan_dg", {})
         self.lambda_dg = float(dan_cfg.get("lambda_dg", 1.0))
         self.kernels = tuple(dan_cfg.get("kernels", DEFAULT_KERNEL_MULTIPLIERS))
+        # Same stability measure as Task 2 DAN / DANN / CDAN: MMD on raw features
+        # lets the optimizer shrink feature norms to reduce the discrepancy and
+        # collapse the classifier (observed on PACS: norms 20 -> 5, class loss
+        # pinned at ln 7). Normalised features remove that direction.
+        self.normalize_features = bool(dan_cfg.get("normalize_features", True))
 
     def compute_loss(self, model, batch, progress):
         logits, features = model(batch["source_x"])
@@ -36,6 +41,8 @@ class DANDG(ERM):
             features[i * per_domain:(i + 1) * per_domain]
             for i in range(len(SOURCE_DOMAINS))
         ]
+        if self.normalize_features:
+            groups = [F.normalize(group, dim=1) for group in groups]
 
         total_mmd = features.new_zeros(())
         pairs = 0

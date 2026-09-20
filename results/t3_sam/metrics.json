@@ -1,0 +1,27 @@
+{
+  "run_id": "t3_sam",
+  "method": "sam",
+  "seed": 6304,
+  "config_hash": "f1916eab5d",
+  "best_mean_source_f1": 0.9583288841490795,
+  "best_row": {
+    "epoch": 9,
+    "train_loss": 0.1699168478597456,
+    "train_cls_loss": 0.04275609838975528,
+    "train_mmd": null,
+    "val_mean_acc": 0.9588658069770041,
+    "val_mean_f1": 0.9583288841490795,
+    "val_worst_f1": 0.937216967484804,
+    "epoch_time_s": 37.12915802001953,
+    "val_photo_acc": 0.9762611275964391,
+    "val_photo_f1": 0.9706771330834273,
+    "val_art_painting_acc": 0.9343065693430657,
+    "val_art_painting_f1": 0.937216967484804,
+    "val_cartoon_acc": 0.9660297239915074,
+    "val_cartoon_f1": 0.9670925518790072
+  },
+  "epochs_ran": 14,
+  "steps_per_epoch": 201,
+  "device": "cuda",
+  "best_checkpoint": "checkpoints/t3_sam/best.pt"
+}

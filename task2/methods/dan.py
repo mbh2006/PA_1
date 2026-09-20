@@ -12,6 +12,8 @@ from __future__ import annotations
 
 from typing import Dict
 
+import torch.nn.functional as F
+
 from shared.mmd import DEFAULT_KERNEL_MULTIPLIERS, mmd2_multikernel
 from task2.methods.base import Method
 
@@ -25,10 +27,19 @@ class DAN(Method):
         dan_cfg = cfg.get("dan", {})
         self.lambda_mmd = float(dan_cfg.get("lambda_mmd", 1.0))
         self.kernels = tuple(dan_cfg.get("kernels", DEFAULT_KERNEL_MULTIPLIERS))
+        # See DANN for the rationale: with frozen BatchNorm statistics the
+        # feature scale is a free parameter that MMD can exploit by shrinking
+        # features until the classifier dies. L2-normalising the aligned
+        # features removes that degenerate direction; classification still uses
+        # the unnormalised feature.
+        self.normalize_features = bool(dan_cfg.get("normalize_features", True))
 
     def compute(self, model, batch, progress):
         logits, features_s, cls_loss = self.source_classification(model, batch)
         _, features_t = model(batch["target_x"])
+        if self.normalize_features:
+            features_s = F.normalize(features_s, dim=1)
+            features_t = F.normalize(features_t, dim=1)
         mmd = mmd2_multikernel(features_s, features_t, self.kernels)
         total = cls_loss + self.lambda_mmd * mmd
         return total, {

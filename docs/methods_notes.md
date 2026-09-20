@@ -110,28 +110,28 @@ evidence that domain information is harder to recover, **not** that class
 information survived; a collapsed representation can also produce 50%. Always
 read it together with source performance and per-class target behaviour.
 
-## Adversarial stability (DANN / CDAN) under frozen BatchNorm
+## Scale stability of alignment objectives under frozen BatchNorm
 
-With BN running statistics frozen, the domain loss has a degenerate direction:
-the backbone can always increase `L_domain` by inflating the norm of the feature
-the discriminator sees (a linear discriminator's confidence grows with input
-scale, so scaling a misclassified example up increases the loss). We observed
-exactly that during local debugging on real PACS data:
+With BN running statistics frozen, the feature *scale* becomes a free parameter
+that every alignment objective can exploit, in both directions:
 
-    step  5  dom loss 0.86    feature norm 27
-    step 10  dom loss 3.27    feature norm 65
-    step 20  dom loss 103     feature norm 1,332
-    step 30  dom loss 5,737   feature norm 130,400   -> divergence
+* **DANN / CDAN** (domain loss): the backbone inflates features to make the
+  discriminator's task easier to distort; norms went 27 -> 130,000 in 30 local
+  steps and the loss exploded. DANN diverged inside epoch 1 and CDAN peaked at
+  epoch 2 before exploding at epoch 4.
+* **DAN-DG** (pairwise MMD): the optimizer does the opposite - it *shrinks*
+  features (mean norm 20 -> 5) until the pairwise discrepancy is tiny, which
+  destroys the classifier (class loss pinned at ln 7 ~ 1.946, validation F1 at
+  chance). Task 2's DAN reduces MMD the same way in principle.
 
-Both adversarial methods diverged this way inside the first epoch (DANN
-immediately, CDAN peaked at epoch 2 and exploded at epoch 4). The stabilisation
-used for both is to **L2-normalise the 512-d feature before the domain head**
-(`normalize_features: true` in the configs). The classification path, the
-objective and the discriminator architecture are unchanged; normalisation only
-removes the scale direction from the adversarial game, making the discriminator
-decision scale-invariant. The unstabilised runs are kept as documented failures
-(`results/` history files) and this consequence of the frozen-BN policy belongs
-in the report's limitations.
+The uniform stabilisation is to make **every alignment term consume
+L2-normalised 512-d features** (`normalize_features: true` in the DAN, DANN,
+CDAN and DAN-DG configs). The classification path always uses the
+unnormalised feature, so the objectives, architectures and hyperparameters are
+unchanged; only the degenerate scale direction is removed. Unstabilised runs
+are kept as documented failures (`results/` history files); the same
+normalisation is what makes the Task 2 vs Task 3 "target access" comparison
+fair.
 
 ## What to inspect when real results arrive
 

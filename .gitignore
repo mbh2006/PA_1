@@ -4,6 +4,7 @@ checkpoints/
 checkpoints_smoke/
 results_smoke/
 kaggle_outputs/
+task4/cache/
 *.pth
 *.pt
 

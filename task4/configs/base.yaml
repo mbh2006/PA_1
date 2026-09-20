@@ -1,0 +1,20 @@
+# Shared Task 4 settings: CIFAR-adapted ResNet-18 trained from scratch on
+# CIFAR-10 only. CIFAR-100 images never appear here.
+method: vanilla
+data_root: data
+split: task4/data/splits/cifar10_seed6304.json
+
+seed: 6304
+num_classes: 10
+batch_size: 128
+num_workers: 4
+
+optimizer:
+  name: sgd
+  lr: 0.1
+  momentum: 0.9
+  weight_decay: 5.0e-4
+scheduler: cosine
+
+max_epochs: 100
+eval_every: 1

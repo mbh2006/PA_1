@@ -1,0 +1,4 @@
+inherit: base.yaml
+method: gcsc
+# Identical to vanilla except RandAugment(num_ops=2, magnitude=9) is inserted
+# after crop/flip and before normalisation (implemented in task4/data/cifar10.py).

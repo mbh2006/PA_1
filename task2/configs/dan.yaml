@@ -3,3 +3,7 @@ method: dan
 dan:
   lambda_mmd: 1.0          # main comparison uses 1; controlled study: {0.1, 1, 10}
   kernels: [0.5, 1.0, 2.0] # multipliers on the median squared distance
+  # Stability under the required frozen-BN policy (see docs/methods_notes.md):
+  # MMD consumes L2-normalised features so it cannot shrink feature norms to
+  # cheat; classification still uses the unnormalised feature.
+  normalize_features: true

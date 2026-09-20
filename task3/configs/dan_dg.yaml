@@ -3,3 +3,6 @@ method: dan_dg
 dan_dg:
   lambda_dg: 1.0           # controlled study: {0.1, 1, 10}; main comparison uses 1
   kernels: [0.5, 1.0, 2.0] # same kernel construction as Task 2 DAN
+  # Same frozen-BN stability measure as the other alignment methods; without it
+  # the pairwise MMD shrinks feature norms until the classifier collapses.
+  normalize_features: true

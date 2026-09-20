@@ -1,0 +1,11 @@
+{
+  "model_run": "t3_sam",
+  "checkpoint": "checkpoints/t3_sam/best.pt",
+  "sharpness_delta": 0.1662379503250122,
+  "loss_clean": 0.16669535636901855,
+  "loss_perturbed": 0.33293330669403076,
+  "radius": 0.05,
+  "examples_per_domain": 32,
+  "seed": 6304,
+  "grad_norm": 2.6775453090667725
+}

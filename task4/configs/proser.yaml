@@ -1,0 +1,16 @@
+inherit: base.yaml
+method: proser
+
+# PROSER fine-tunes the selected vanilla checkpoint for 50 epochs with SGD
+# lr 1e-3, and appends five randomly initialised dummy classifiers.
+max_epochs: 50
+optimizer:
+  name: sgd
+  lr: 1.0e-3
+  momentum: 0.9
+  weight_decay: 5.0e-4
+
+proser:
+  num_dummies: 5
+  beta: 1.0    # classifier-placeholder weight (assignment)
+  gamma: 0.1   # data-placeholder weight (assignment)
