@@ -1,0 +1,19 @@
+{
+  "id": "mbh2006/pa1-t4-gcsc-proser",
+  "title": "pa1 t4 gcsc proser",
+  "code_file": "main.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": [
+    "pankrzysiu/cifar10-python",
+    "robsonricardodasilva/cifar-100-python",
+    "mbh2006/pa1-t4-vanilla-ckpt",
+    "mbh2006/pa1-t4-vanilla-cache"
+  ],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}

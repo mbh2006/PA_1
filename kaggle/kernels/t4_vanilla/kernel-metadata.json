@@ -1,0 +1,17 @@
+{
+  "id": "mbh2006/pa1-t4-vanilla",
+  "title": "pa1 t4 vanilla",
+  "code_file": "main.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": [
+    "pankrzysiu/cifar10-python",
+    "robsonricardodasilva/cifar-100-python"
+  ],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}
