@@ -1,7 +1,7 @@
 {
   "run_id": "t2_dan",
   "method": "dan",
-  "score": 0.837431693989071,
+  "score": 0.894808743169399,
   "chance": 0.5,
   "n_features": 512,
   "n_per_domain_class": 1219,

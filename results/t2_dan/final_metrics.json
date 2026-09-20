@@ -5,60 +5,60 @@
   "checkpoint": "checkpoints/t2_dan/best.pt",
   "source_validation": {
     "photo": {
-      "accuracy": 0.9762611275964391,
-      "macro_f1": 0.9718624477487221,
+      "accuracy": 0.9643916913946587,
+      "macro_f1": 0.9575174765125253,
       "per_class_accuracy": [
-        0.9210526315789473,
-        0.9512195121951219,
-        0.972972972972973,
+        0.9473684210526315,
+        0.926829268292683,
+        0.9459459459459459,
         1.0,
-        0.95,
+        0.875,
         1.0,
         1.0
       ],
       "confusion_matrix": [
         [
-          35,
-          1,
-          0,
-          0,
-          2,
-          0,
-          0
-        ],
-        [
-          1,
-          39,
-          0,
-          0,
-          1,
-          0,
-          0
-        ],
-        [
-          0,
-          0,
           36,
           1,
           0,
           0,
+          1,
+          0,
           0
         ],
         [
-          0,
-          0,
-          0,
+          3,
           38,
           0,
           0,
+          0,
+          0,
           0
         ],
         [
+          1,
           0,
+          35,
           1,
           0,
           0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
           38,
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          0,
+          0,
+          35,
           0,
           1
         ],
@@ -84,62 +84,62 @@
       "num_samples": 337
     },
     "art_painting": {
-      "accuracy": 0.9416058394160584,
-      "macro_f1": 0.9418974719551947,
+      "accuracy": 0.9124087591240876,
+      "macro_f1": 0.9126582968027732,
       "per_class_accuracy": [
-        0.9473684210526315,
-        0.9803921568627451,
-        0.9473684210526315,
-        1.0,
-        0.9024390243902439,
+        0.9210526315789473,
+        0.9607843137254902,
+        0.9649122807017544,
+        0.918918918918919,
+        0.8536585365853658,
         0.9491525423728814,
-        0.9
+        0.8444444444444444
       ],
       "confusion_matrix": [
         [
-          72,
+          70,
           2,
+          1,
           0,
           0,
-          2,
+          0,
+          3
+        ],
+        [
+          0,
+          49,
+          1,
+          0,
+          1,
           0,
           0
         ],
         [
           0,
-          50,
-          0,
-          0,
           1,
+          55,
+          1,
+          0,
           0,
           0
         ],
         [
           0,
-          1,
-          54,
           0,
-          1,
           0,
+          34,
+          1,
+          1,
           1
         ],
         [
-          0,
-          0,
-          0,
-          37,
-          0,
-          0,
-          0
-        ],
-        [
           1,
           2,
+          3,
           0,
+          35,
           0,
-          37,
-          0,
-          1
+          0
         ],
         [
           0,
@@ -151,154 +151,154 @@
           1
         ],
         [
+          5,
           3,
           4,
-          1,
-          1,
+          2,
           0,
           0,
-          81
+          76
         ]
       ],
       "num_samples": 411
     },
     "cartoon": {
-      "accuracy": 0.940552016985138,
-      "macro_f1": 0.9406605162878071,
+      "accuracy": 0.9256900212314225,
+      "macro_f1": 0.9256934791157775,
       "per_class_accuracy": [
-        0.9615384615384616,
-        0.9782608695652174,
-        0.9571428571428572,
-        0.9259259259259259,
-        0.8461538461538461,
+        0.8846153846153846,
+        0.9891304347826086,
+        1.0,
+        0.8888888888888888,
+        0.7692307692307693,
         0.9827586206896551,
-        0.9135802469135802
+        0.9259259259259259
       ],
       "confusion_matrix": [
         [
-          75,
+          69,
+          3,
+          3,
           0,
+          3,
           0,
-          0,
-          0,
-          0,
-          3
+          0
         ],
         [
           0,
-          90,
+          91,
+          1,
           0,
           0,
           0,
-          0,
-          2
+          0
         ],
         [
           0,
           0,
-          67,
+          70,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
           0,
           2,
-          0,
-          1
-        ],
-        [
-          1,
-          0,
-          1,
-          25,
+          24,
           0,
           0,
           0
         ],
         [
           7,
-          1,
           2,
+          5,
           0,
-          55,
+          50,
           0,
-          0
+          1
         ],
         [
           0,
           0,
-          0,
           1,
+          0,
           0,
           57,
           0
         ],
         [
-          4,
-          0,
           2,
           0,
-          1,
+          4,
           0,
-          74
+          0,
+          0,
+          75
         ]
       ],
       "num_samples": 471
     }
   },
   "target": {
-    "accuracy": 0.6879613133112751,
-    "macro_f1": 0.6224555775913628,
+    "accuracy": 0.7752608806312039,
+    "macro_f1": 0.7382133529418132,
     "per_class_accuracy": [
-      0.6282383419689119,
-      0.7162162162162162,
-      0.7357237715803453,
-      0.75,
-      0.6470588235294118,
+      0.6424870466321243,
+      0.7905405405405406,
+      0.8379814077025233,
+      0.868421052631579,
+      0.7034313725490197,
       1.0,
-      0.4375
+      0.95
     ],
     "confusion_matrix": [
       [
-        485,
-        40,
-        24,
-        1,
-        18,
-        64,
-        140
-      ],
-      [
-        70,
-        530,
-        1,
+        496,
+        51,
+        55,
         0,
-        2,
-        79,
-        58
+        63,
+        29,
+        78
       ],
       [
-        75,
-        11,
-        554,
-        2,
-        31,
-        53,
-        27
+        72,
+        585,
+        13,
+        0,
+        4,
+        29,
+        37
       ],
       [
-        2,
+        43,
         8,
-        45,
-        456,
+        631,
         0,
-        49,
-        48
+        37,
+        19,
+        15
       ],
       [
-        112,
-        31,
-        27,
-        0,
+        4,
+        9,
+        37,
         528,
-        83,
-        35
+        0,
+        9,
+        21
+      ],
+      [
+        55,
+        16,
+        101,
+        0,
+        574,
+        58,
+        12
       ],
       [
         0,
@@ -312,11 +312,11 @@
       [
         0,
         0,
+        4,
         0,
         0,
-        0,
-        90,
-        70
+        4,
+        152
       ]
     ],
     "num_samples": 3929
@@ -325,32 +325,32 @@
     {
       "class": "dog",
       "support": 772,
-      "correct": 485,
-      "accuracy": 0.6282383419689119
+      "correct": 496,
+      "accuracy": 0.6424870466321243
     },
     {
       "class": "elephant",
       "support": 740,
-      "correct": 530,
-      "accuracy": 0.7162162162162162
+      "correct": 585,
+      "accuracy": 0.7905405405405406
     },
     {
       "class": "giraffe",
       "support": 753,
-      "correct": 554,
-      "accuracy": 0.7357237715803453
+      "correct": 631,
+      "accuracy": 0.8379814077025233
     },
     {
       "class": "guitar",
       "support": 608,
-      "correct": 456,
-      "accuracy": 0.75
+      "correct": 528,
+      "accuracy": 0.868421052631579
     },
     {
       "class": "horse",
       "support": 816,
-      "correct": 528,
-      "accuracy": 0.6470588235294118
+      "correct": 574,
+      "accuracy": 0.7034313725490197
     },
     {
       "class": "house",
@@ -361,82 +361,85 @@
     {
       "class": "person",
       "support": 160,
-      "correct": 70,
-      "accuracy": 0.4375
+      "correct": 152,
+      "accuracy": 0.95
     }
   ],
   "target_top_confusions": [
     {
-      "true_class": "dog",
-      "predicted_class": "person",
-      "count": 140,
-      "share_of_true_class": 0.18134715025906736
-    },
-    {
       "true_class": "horse",
-      "predicted_class": "dog",
-      "count": 112,
-      "share_of_true_class": 0.13725490196078433
-    },
-    {
-      "true_class": "person",
-      "predicted_class": "house",
-      "count": 90,
-      "share_of_true_class": 0.5625
-    },
-    {
-      "true_class": "horse",
-      "predicted_class": "house",
-      "count": 83,
-      "share_of_true_class": 0.1017156862745098
-    },
-    {
-      "true_class": "elephant",
-      "predicted_class": "house",
-      "count": 79,
-      "share_of_true_class": 0.10675675675675676
-    },
-    {
-      "true_class": "giraffe",
-      "predicted_class": "dog",
-      "count": 75,
-      "share_of_true_class": 0.099601593625498
-    },
-    {
-      "true_class": "elephant",
-      "predicted_class": "dog",
-      "count": 70,
-      "share_of_true_class": 0.0945945945945946
+      "predicted_class": "giraffe",
+      "count": 101,
+      "share_of_true_class": 0.12377450980392157
     },
     {
       "true_class": "dog",
-      "predicted_class": "house",
-      "count": 64,
-      "share_of_true_class": 0.08290155440414508
+      "predicted_class": "person",
+      "count": 78,
+      "share_of_true_class": 0.10103626943005181
     },
     {
       "true_class": "elephant",
-      "predicted_class": "person",
+      "predicted_class": "dog",
+      "count": 72,
+      "share_of_true_class": 0.0972972972972973
+    },
+    {
+      "true_class": "dog",
+      "predicted_class": "horse",
+      "count": 63,
+      "share_of_true_class": 0.08160621761658031
+    },
+    {
+      "true_class": "horse",
+      "predicted_class": "house",
       "count": 58,
-      "share_of_true_class": 0.07837837837837838
+      "share_of_true_class": 0.07107843137254902
+    },
+    {
+      "true_class": "dog",
+      "predicted_class": "giraffe",
+      "count": 55,
+      "share_of_true_class": 0.07124352331606218
+    },
+    {
+      "true_class": "horse",
+      "predicted_class": "dog",
+      "count": 55,
+      "share_of_true_class": 0.06740196078431372
+    },
+    {
+      "true_class": "dog",
+      "predicted_class": "elephant",
+      "count": 51,
+      "share_of_true_class": 0.06606217616580311
     },
     {
       "true_class": "giraffe",
-      "predicted_class": "house",
-      "count": 53,
-      "share_of_true_class": 0.0703851261620186
+      "predicted_class": "dog",
+      "count": 43,
+      "share_of_true_class": 0.057104913678618856
     },
     {
-      "true_class": "guitar",
-      "predicted_class": "house",
-      "count": 49,
-      "share_of_true_class": 0.0805921052631579
-    },
-    {
-      "true_class": "guitar",
+      "true_class": "elephant",
       "predicted_class": "person",
-      "count": 48,
-      "share_of_true_class": 0.07894736842105263
+      "count": 37,
+      "share_of_true_class": 0.05
+    },
+    {
+      "true_class": "giraffe",
+      "predicted_class": "horse",
+      "count": 37,
+      "share_of_true_class": 0.049136786188579015
+    },
+    {
+      "true_class": "guitar",
+      "predicted_class": "giraffe",
+      "count": 37,
+      "share_of_true_class": 0.06085526315789474
     }
-  ]
+  ],
+  "target_accuracy_change_vs_baseline": 0.10053448714685675,
+  "target_macro_f1_change_vs_baseline": 0.08038894332674618,
+  "baseline_run_id": "t2_source_only"
 }

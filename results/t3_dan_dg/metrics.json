@@ -1,0 +1,27 @@
+{
+  "run_id": "t3_dan_dg",
+  "method": "dan_dg",
+  "seed": 6304,
+  "config_hash": "5ed9ba3e6d",
+  "best_mean_source_f1": 0.9123442542404119,
+  "best_row": {
+    "epoch": 18,
+    "train_loss": 0.5181115498738502,
+    "train_cls_loss": 0.17768350223065424,
+    "train_mmd": 0.3404280468080174,
+    "val_mean_acc": 0.9182720911328617,
+    "val_mean_f1": 0.9123442542404119,
+    "val_worst_f1": 0.8925997405266098,
+    "epoch_time_s": 23.57661199569702,
+    "val_photo_acc": 0.9376854599406528,
+    "val_photo_f1": 0.9285358743103556,
+    "val_art_painting_acc": 0.8978102189781022,
+    "val_art_painting_f1": 0.8925997405266098,
+    "val_cartoon_acc": 0.9193205944798302,
+    "val_cartoon_f1": 0.9158971478842701
+  },
+  "epochs_ran": 23,
+  "steps_per_epoch": 201,
+  "device": "cuda",
+  "best_checkpoint": "checkpoints/t3_dan_dg/best.pt"
+}
