@@ -1,0 +1,25 @@
+# Task 3 shares the Task 2 protocol exactly: same splits, backbone, optimiser,
+# batch composition, epoch budget, early stopping, seed and frozen-BN policy.
+method: erm
+data_root: data/pacs
+splits: shared/splits/pacs_sketch_seed6304.json
+target_domain: sketch
+
+seed: 6304
+train_frac: 0.8
+num_classes: 7
+
+resize_size: 256
+crop_size: 224
+
+# Task 3 has no target loader: 8 examples per source domain (24 per update)
+batch_size_per_domain: 8
+
+max_epochs: 30
+early_stop_patience: 5
+num_workers: 4
+
+optimizer:
+  name: adamw
+  lr: 1.0e-4
+  weight_decay: 1.0e-4

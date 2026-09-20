@@ -1,23 +1,13 @@
-"""Task 2 training entry point - one pipeline for every method.
+"""Task 3 training entry point (DAN-DG / SAM; ERM is reused from Task 2).
 
 Examples::
 
-    # real run (Kaggle GPU)
-    python -m task2.train --config task2/configs/dann.yaml
+    python -m task3.train --config task3/configs/dan_dg.yaml
+    python -m task3.train --config task3/configs/sam.yaml --rho 0.01   # controlled study
 
-    # resume after a Kaggle session ran out of time
-    python -m task2.train --config task2/configs/dann.yaml --resume \
-        --run-id task2_dann_seed6304_20260920-120000
-
-    # local CPU smoke test on fake data (no PACS download needed)
-    python -m task2.train --config task2/configs/source_only.yaml --smoke \
-        --data-root data/fake_pacs --splits data/fake_pacs/splits_seed6304.json \
-        --out-root results_smoke --ckpt-root checkpoints_smoke --run-id smoke_source_only
-
-What is fixed across methods (per the assignment): backbone + head, full
-fine-tuning, optimizer (AdamW 1e-4 / wd 1e-4), augmentation, domain-balanced
-batching, epoch budget 30, early stopping 5 on mean source-validation macro-F1,
-seed 6304, and the frozen-BN running-statistics policy.
+The Task 2 ERM checkpoint is *loaded*, never retrained: the baseline for this
+task is exactly the source-only model from Task 2. No Sketch image is touched
+anywhere in this file; target evaluation happens only in ``evaluate_sketch.py``.
 """
 from __future__ import annotations
 
@@ -42,38 +32,36 @@ from shared.pacs import SOURCE_DOMAINS, find_pacs_root
 from shared.pacs_protocol import (DomainBalancedIterator, build_splits, eval_transform,
                                   load_splits, make_loader, save_splits, split_summary,
                                   subset_from_paths, train_transform)
-from task2.methods import build_method
+from task3.methods import build_method
 
 
-# ---------------------------------------------------------------------------- helpers
 def parse_args(argv=None):
-    parser = argparse.ArgumentParser(description="Train a Task 2 adaptation method on PACS.")
+    parser = argparse.ArgumentParser(description="Train a Task 3 domain-generalisation method.")
     parser.add_argument("--config", required=True)
     parser.add_argument("--data-root", default=None)
     parser.add_argument("--splits", default=None)
     parser.add_argument("--run-id", default=None)
     parser.add_argument("--out-root", default="results")
     parser.add_argument("--ckpt-root", default="checkpoints")
-    parser.add_argument("--device", default=None, help="cpu / cuda (default: auto)")
-    parser.add_argument("--smoke", action="store_true", help="tiny run for pipeline testing")
+    parser.add_argument("--device", default=None)
+    parser.add_argument("--smoke", action="store_true")
     parser.add_argument("--max-epochs", type=int, default=None)
     parser.add_argument("--steps-per-epoch", type=int, default=None)
     parser.add_argument("--num-workers", type=int, default=None)
     parser.add_argument("--resume", action="store_true")
     # controlled-study overrides (recorded in the saved config)
-    parser.add_argument("--lambda-mmd", type=float, default=None)
-    parser.add_argument("--max-alpha", type=float, default=None)
+    parser.add_argument("--lambda-dg", type=float, default=None)
+    parser.add_argument("--rho", type=float, default=None)
     return parser.parse_args(argv)
 
 
-def resolve_device(name: str | None) -> torch.device:
+def resolve_device(name):
     if name:
         return torch.device(name)
     return torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-def prepare_data(cfg: Dict, args) -> tuple:
-    """Find the dataset root and load (or build once) the frozen split file."""
+def prepare_data(cfg, args):
     data_root = find_pacs_root(args.data_root or cfg["data_root"])
     splits_path = Path(args.splits or cfg["splits"])
     if splits_path.exists():
@@ -81,56 +69,38 @@ def prepare_data(cfg: Dict, args) -> tuple:
     else:
         splits = build_splits(data_root, seed=cfg["seed"], train_frac=cfg["train_frac"])
         save_splits(splits, splits_path)
-        get_logger().info("Created new split file at %s", splits_path)
     return data_root, splits
 
 
-def build_iterator(cfg: Dict, data_root, splits: Dict, method, pin_memory: bool) -> DomainBalancedIterator:
+def build_iterator(cfg, data_root, splits, pin_memory):
     transform = train_transform(cfg["resize_size"], cfg["crop_size"])
-    source_loaders = {}
-    for domain in SOURCE_DOMAINS:
-        dataset = subset_from_paths(data_root, splits["domains"][domain]["train"], transform, domain)
-        source_loaders[domain] = make_loader(
-            dataset,
-            batch_size=cfg["batch_size_per_domain"],
-            shuffle=True,
-            num_workers=cfg["num_workers"],
-            pin_memory=pin_memory,
-            seed=cfg["seed"],
-        )
-    target_loader = None
-    if method.requires_target:
-        target_domain = cfg["target_domain"]
-        dataset = subset_from_paths(data_root, splits["domains"][target_domain]["all"], transform, target_domain)
-        target_loader = make_loader(
-            dataset,
-            batch_size=cfg["target_batch_size"],
-            shuffle=True,
-            num_workers=cfg["num_workers"],
-            drop_last=True,
-            pin_memory=pin_memory,
-            seed=cfg["seed"],
-        )
-    return DomainBalancedIterator(source_loaders, target_loader)
-
-
-def build_val_loaders(cfg: Dict, data_root, splits: Dict):
-    transform = eval_transform(cfg["resize_size"], cfg["crop_size"])
     loaders = {}
     for domain in SOURCE_DOMAINS:
-        dataset = subset_from_paths(data_root, splits["domains"][domain]["val"], transform, domain)
+        dataset = subset_from_paths(data_root, splits["domains"][domain]["train"], transform, domain)
         loaders[domain] = make_loader(
-            dataset, batch_size=64, shuffle=False, num_workers=cfg["num_workers"]
+            dataset, batch_size=cfg["batch_size_per_domain"], shuffle=True,
+            num_workers=cfg["num_workers"], pin_memory=pin_memory, seed=cfg["seed"],
         )
-    return loaders
+    return DomainBalancedIterator(loaders, target_loader=None)
 
 
-def to_device(batch: Dict[str, torch.Tensor], device: torch.device) -> Dict[str, torch.Tensor]:
+def build_val_loaders(cfg, data_root, splits):
+    transform = eval_transform(cfg["resize_size"], cfg["crop_size"])
+    return {
+        domain: make_loader(
+            subset_from_paths(data_root, splits["domains"][domain]["val"], transform, domain),
+            batch_size=64, shuffle=False, num_workers=cfg["num_workers"],
+        )
+        for domain in SOURCE_DOMAINS
+    }
+
+
+def to_device(batch, device):
     return {k: v.to(device, non_blocking=True) for k, v in batch.items()}
 
 
 @torch.no_grad()
-def evaluate_source_domains(model, val_loaders, num_classes: int, device) -> Dict[str, Dict]:
+def evaluate_source_domains(model, val_loaders, num_classes, device):
     model.eval()
     results = {}
     for domain, loader in val_loaders.items():
@@ -145,14 +115,13 @@ def evaluate_source_domains(model, val_loaders, num_classes: int, device) -> Dic
     return results
 
 
-# ------------------------------------------------------------------------------- train
-def train(cfg: Dict, args, steps_per_epoch_override: int | None = None) -> RunLogger:
+def train(cfg: Dict, args, steps_per_epoch_override=None) -> RunLogger:
     logger = get_logger()
     set_seed(cfg["seed"])
     device = resolve_device(args.device)
     pin_memory = device.type == "cuda"
 
-    run = RunLogger(args.run_id or make_run_id("task2", cfg["method"], cfg["seed"]),
+    run = RunLogger(args.run_id or make_run_id("task3", cfg["method"], cfg["seed"]),
                     args.out_root, args.ckpt_root)
     run.save_config(cfg)
     data_root, splits = prepare_data(cfg, args)
@@ -161,12 +130,11 @@ def train(cfg: Dict, args, steps_per_epoch_override: int | None = None) -> RunLo
     logger.info("splits: %s", split_summary(splits))
 
     model = ResNet18PACS(num_classes=cfg["num_classes"]).to(device)
-    method = build_method(cfg, device, model.feature_dim, cfg["num_classes"])
-    parameters = list(model.parameters()) + list(method.extra_parameters())
-    optimizer = AdamW(parameters, lr=cfg["optimizer"]["lr"],
+    method = build_method(cfg, device, cfg["num_classes"])
+    optimizer = AdamW(model.parameters(), lr=cfg["optimizer"]["lr"],
                       weight_decay=cfg["optimizer"]["weight_decay"])
 
-    iterator = build_iterator(cfg, data_root, splits, method, pin_memory)
+    iterator = build_iterator(cfg, data_root, splits, pin_memory)
     if steps_per_epoch_override:
         steps_per_epoch = steps_per_epoch_override
     else:
@@ -181,12 +149,10 @@ def train(cfg: Dict, args, steps_per_epoch_override: int | None = None) -> RunLo
         checkpoint = torch.load(run.ckpt_dir / "last.pt", map_location=device, weights_only=False)
         model.load_state_dict(checkpoint["model"])
         optimizer.load_state_dict(checkpoint["optimizer"])
-        if checkpoint.get("method"):
-            method.load_state_dict(checkpoint["method"])
         start_epoch = checkpoint["epoch"] + 1
         best_mean_f1 = checkpoint["best_mean_f1"]
         patience = checkpoint["patience"]
-        logger.info("Resumed %s at epoch %d (best mean f1 %.4f)", run.run_id, start_epoch, best_mean_f1)
+        logger.info("Resumed %s at epoch %d", run.run_id, start_epoch)
 
     history = []
     epoch = start_epoch - 1
@@ -199,11 +165,8 @@ def train(cfg: Dict, args, steps_per_epoch_override: int | None = None) -> RunLo
             global_step = (epoch - 1) * steps_per_epoch + step
             progress = (global_step - 1) / max(1, total_steps - 1)
             batch = to_device(iterator.next_batch(), device)
-            loss, logs = method.compute(model, batch, progress)
-            optimizer.zero_grad(set_to_none=True)
-            loss.backward()
-            optimizer.step()
-            sums["loss"] += float(loss.detach())
+            loss_value, logs = method.step(model, batch, optimizer, progress)
+            sums["loss"] += loss_value
             for key, value in logs.items():
                 sums[key] += float(value)
         train_stats = {key: value / steps_per_epoch for key, value in sums.items()}
@@ -211,17 +174,16 @@ def train(cfg: Dict, args, steps_per_epoch_override: int | None = None) -> RunLo
         validation = evaluate_source_domains(model, val_loaders, cfg["num_classes"], device)
         mean_acc = float(np.mean([validation[d]["accuracy"] for d in SOURCE_DOMAINS]))
         mean_f1 = float(np.mean([validation[d]["macro_f1"] for d in SOURCE_DOMAINS]))
+        worst_f1 = float(np.min([validation[d]["macro_f1"] for d in SOURCE_DOMAINS]))
 
         row: Dict[str, float] = {
             "epoch": epoch,
             "train_loss": train_stats.get("loss", float("nan")),
             "train_cls_loss": train_stats.get("cls_loss", float("nan")),
             "train_mmd": train_stats.get("mmd", float("nan")),
-            "train_dom_loss": train_stats.get("dom_loss", float("nan")),
-            "train_dom_acc": train_stats.get("dom_acc", float("nan")),
-            "train_alpha": train_stats.get("alpha", float("nan")),
             "val_mean_acc": mean_acc,
             "val_mean_f1": mean_f1,
+            "val_worst_f1": worst_f1,
             "epoch_time_s": time.time() - started,
         }
         for domain in SOURCE_DOMAINS:
@@ -229,10 +191,9 @@ def train(cfg: Dict, args, steps_per_epoch_override: int | None = None) -> RunLo
             row[f"val_{domain}_f1"] = validation[domain]["macro_f1"]
         history.append(row)
         run.log_row(row)
-        logger.info(
-            "epoch %d/%d | loss %.4f | mean source f1 %.4f (best %.4f, patience %d)",
-            epoch, cfg["max_epochs"], row["train_loss"], mean_f1, max(best_mean_f1, mean_f1), patience,
-        )
+        logger.info("epoch %d/%d | loss %.4f | mean f1 %.4f worst %.4f (best %.4f, patience %d)",
+                    epoch, cfg["max_epochs"], row["train_loss"], mean_f1, worst_f1,
+                    max(best_mean_f1, mean_f1), patience)
 
         improved = mean_f1 > best_mean_f1 + 1e-6
         if improved:
@@ -245,7 +206,6 @@ def train(cfg: Dict, args, steps_per_epoch_override: int | None = None) -> RunLo
         checkpoint = {
             "model": model.state_dict(),
             "optimizer": optimizer.state_dict(),
-            "method": method.extra_state_dict(),
             "epoch": epoch,
             "best_mean_f1": best_mean_f1,
             "patience": patience,
@@ -254,10 +214,8 @@ def train(cfg: Dict, args, steps_per_epoch_override: int | None = None) -> RunLo
         torch.save(checkpoint, run.ckpt_dir / "last.pt")
         if improved:
             torch.save(checkpoint, run.ckpt_dir / "best.pt")
-
         if patience >= cfg["early_stop_patience"]:
-            logger.info("Early stopping at epoch %d (no improvement for %d epochs)",
-                        epoch, cfg["early_stop_patience"])
+            logger.info("Early stopping at epoch %d", epoch)
             break
 
     run.save_json("metrics.json", {
@@ -272,16 +230,13 @@ def train(cfg: Dict, args, steps_per_epoch_override: int | None = None) -> RunLo
         "device": str(device),
         "best_checkpoint": str(run.ckpt_dir / "best.pt"),
     })
-
-    # training curves (required evidence: classification / alignment-loss curves)
     try:
-        plot_history(history, ["train_loss", "train_cls_loss", "train_mmd", "train_dom_loss"],
-                     run.results_dir / "curves_train.png", title=f"task2 {cfg['method']} - training losses")
-        plot_history(history, ["val_mean_f1", "val_mean_acc"],
-                     run.results_dir / "curves_val.png", title=f"task2 {cfg['method']} - source validation")
-    except Exception as exc:  # plotting must never kill a finished run
-        logger.warning("Could not write training curves: %s", exc)
-
+        plot_history(history, ["train_loss", "train_cls_loss", "train_mmd"],
+                     run.results_dir / "curves_train.png", title=f"task3 {cfg['method']} - training losses")
+        plot_history(history, ["val_mean_f1", "val_worst_f1"],
+                     run.results_dir / "curves_val.png", title=f"task3 {cfg['method']} - source validation")
+    except Exception as exc:
+        logger.warning("Could not write curves: %s", exc)
     logger.info("Finished %s. Best mean source macro-F1: %.4f", run.run_id, best_mean_f1)
     return run
 
@@ -304,10 +259,10 @@ def main(argv=None) -> None:
     elif args.max_epochs:
         cfg["max_epochs"] = args.max_epochs
     # study overrides are written into the saved config for provenance
-    if args.lambda_mmd is not None:
-        cfg.setdefault("dan", {})["lambda_mmd"] = args.lambda_mmd
-    if args.max_alpha is not None:
-        cfg.setdefault("dann", {})["max_alpha"] = args.max_alpha
+    if args.lambda_dg is not None:
+        cfg.setdefault("dan_dg", {})["lambda_dg"] = args.lambda_dg
+    if args.rho is not None:
+        cfg.setdefault("sam", {})["rho"] = args.rho
     train(cfg, args, steps_per_epoch_override=args.steps_per_epoch)
 
 

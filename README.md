@@ -7,8 +7,8 @@ invariant to, and reject:
 | Task | Topic | Status |
 |------|--------------------------------------------|--------|
 | 1 | Inductive biases: shape / texture / colour / spatial structure (STL-10; ResNet-50, ViT-B/16, CLIP) | planned |
-| 2 | Unsupervised domain adaptation on PACS (Target = Sketch): Source-only, DAN, DANN, CDAN | implemented |
-| 3 | Domain generalisation on PACS (Sketch unseen): ERM, DAN-DG, SAM | next |
+| 2 | Unsupervised domain adaptation on PACS (Target = Sketch): Source-only, DAN, DANN, CDAN | implemented, running |
+| 3 | Domain generalisation on PACS (Sketch unseen): ERM (reused from T2), DAN-DG, SAM | implemented, running |
 | 4 | Open-set recognition (CIFAR-10 known vs CIFAR-100 unknowns): MSP/MLS/Energy/Mahalanobis, GCSC, PROSER | planned |
 
 ## Repository layout
@@ -135,6 +135,46 @@ This creates a fake PACS tree, builds splits, then checks:
 * BatchNorm running statistics never change while gamma/beta still get gradients;
 * all four methods train, checkpoint, evaluate and write their result files;
 * `evaluate_final` and `domain_separability` run on a finished checkpoint.
+
+## Task 3 - domain generalisation with Sketch unseen
+
+Task 3 shares the Task 2 protocol (same split file, same backbone, optimiser,
+batch composition, epochs, early stopping, seed and frozen-BN policy) but
+**never loads Sketch**: training, model selection and diagnostics are source-only.
+
+```bash
+python -m task3.train --config task3/configs/dan_dg.yaml   # pairwise source-domain MMD
+python -m task3.train --config task3/configs/sam.yaml      # SAM, rho = 0.05
+python -m task3.train --config task3/configs/sam.yaml --rho 0.01   # controlled study
+```
+
+The ERM baseline is the Task 2 source-only checkpoint, loaded unchanged.
+
+Final evaluation and diagnostics:
+
+```bash
+python -m task3.evaluate_sketch --model-run results/t3_sam --erm-run results/t2_source_only
+python -m task3.evaluation.source_domain_separability --model-run results/t3_sam
+python -m task3.evaluation.sharpness --model-run results/t3_sam
+```
+
+`sharpness.json` reports `Delta = L_val(theta + eps) - L_val(theta)` with
+`eps = 0.05 * grad / ||grad||` on a fixed 32-per-domain batch (seed 6304);
+`source_domain_separability.json` reports three-way held-out accuracy of a
+logistic probe on the source validation features (chance 33.3%).
+
+## Kaggle kernels (API-driven)
+
+`kaggle/kernels/` holds generated script kernels for every run (main
+comparisons, the two controlled studies, and the Task 3 ERM diagnostics).
+Regenerate and drive them with:
+
+```powershell
+python kaggle/make_kernels.py
+python scripts/kaggle_push.py push  t3_sam     # push (starts a headless GPU commit)
+python scripts/kaggle_push.py watch t3_sam
+python scripts/kaggle_push.py pull  t3_sam     # downloads the output into kaggle_outputs/
+```
 
 ## Reproducibility rules (assignment requirements)
 

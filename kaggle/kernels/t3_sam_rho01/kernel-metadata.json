@@ -1,6 +1,6 @@
 {
-  "id": "mbh2006/pa1-t2-source-only",
-  "title": "pa1 t2 source only",
+  "id": "mbh2006/pa1-t3-sam-rho01",
+  "title": "pa1 t3 sam rho01",
   "code_file": "main.py",
   "language": "python",
   "kernel_type": "script",
@@ -8,7 +8,8 @@
   "enable_gpu": true,
   "enable_internet": true,
   "dataset_sources": [
-    "mbh2006/pacs-dataset01"
+    "mbh2006/pacs-dataset01",
+    "mbh2006/pa1-t2-erm-results"
   ],
   "competition_sources": [],
   "kernel_sources": [],
