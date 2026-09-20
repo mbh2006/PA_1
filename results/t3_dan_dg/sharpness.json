@@ -1,11 +1,11 @@
 {
   "model_run": "t3_dan_dg",
-  "checkpoint": "checkpoints/t3_dan_dg/best.pt",
-  "sharpness_delta": 134.22528782486916,
-  "loss_clean": 0.4791646897792816,
-  "loss_perturbed": 134.70445251464844,
+  "checkpoint": "checkpoints\\t3_dan_dg\\best.pt",
+  "sharpness_delta": 134.22617241740227,
+  "loss_clean": 0.47916510701179504,
+  "loss_perturbed": 134.70533752441406,
   "radius": 0.05,
   "examples_per_domain": 32,
   "seed": 6304,
-  "grad_norm": 470.3066101074219
+  "grad_norm": 470.306396484375
 }
