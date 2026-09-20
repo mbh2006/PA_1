@@ -1,0 +1,9 @@
+{
+  "run_id": "t4_proser",
+  "method": "proser",
+  "seed": 6304,
+  "config_hash": "596ad67be5",
+  "best_val_accuracy": 0.945,
+  "epochs_ran": 50,
+  "best_checkpoint": "checkpoints/t4_proser/best.pt"
+}

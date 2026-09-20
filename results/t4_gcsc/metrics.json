@@ -1,0 +1,9 @@
+{
+  "run_id": "t4_gcsc",
+  "method": "gcsc",
+  "seed": 6304,
+  "config_hash": "0938c78778",
+  "best_val_accuracy": 0.9546,
+  "epochs_ran": 100,
+  "best_checkpoint": "checkpoints/t4_gcsc/best.pt"
+}

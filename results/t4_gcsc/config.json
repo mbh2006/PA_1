@@ -1,0 +1,20 @@
+{
+  "batch_size": 128,
+  "ckpt_root": "checkpoints",
+  "data_root": "data",
+  "eval_every": 1,
+  "max_epochs": 100,
+  "method": "gcsc",
+  "num_classes": 10,
+  "num_workers": 2,
+  "optimizer": {
+    "lr": 0.1,
+    "momentum": 0.9,
+    "name": "sgd",
+    "weight_decay": 0.0005
+  },
+  "out_root": "results",
+  "scheduler": "cosine",
+  "seed": 6304,
+  "split": "task4/data/splits/cifar10_seed6304.json"
+}

@@ -1,0 +1,217 @@
+{
+  "posthoc_vanilla": [
+    {
+      "score": "MSP",
+      "auroc_near": 0.8086900624999999,
+      "auroc_far": 0.891193375,
+      "auroc_all_unknowns": 0.8499417187499999,
+      "threshold": 0.14307644282266457,
+      "known_test_acceptance": 0.9428,
+      "near_rejection": 0.27375,
+      "near_fpr95": 0.7262500000000001,
+      "far_rejection": 0.46125,
+      "far_fpr95": 0.5387500000000001
+    },
+    {
+      "score": "MLS",
+      "auroc_near": 0.7870525625,
+      "auroc_far": 0.88416,
+      "auroc_all_unknowns": 0.83560628125,
+      "threshold": -5.804837536811826,
+      "known_test_acceptance": 0.9475,
+      "near_rejection": 0.3,
+      "near_fpr95": 0.7,
+      "far_rejection": 0.53125,
+      "far_fpr95": 0.46875
+    },
+    {
+      "score": "Energy",
+      "auroc_near": 0.7874989375,
+      "auroc_far": 0.8848123749999999,
+      "auroc_all_unknowns": 0.83615565625,
+      "threshold": -5.960542949786668,
+      "known_test_acceptance": 0.9496,
+      "near_rejection": 0.29625,
+      "near_fpr95": 0.70375,
+      "far_rejection": 0.5325,
+      "far_fpr95": 0.4675
+    },
+    {
+      "score": "Mahalanobis",
+      "auroc_near": 0.7859244374999999,
+      "auroc_far": 0.915549,
+      "auroc_all_unknowns": 0.8507367187500001,
+      "threshold": 2944.7837217048377,
+      "known_test_acceptance": 0.9493,
+      "near_rejection": 0.23625,
+      "near_fpr95": 0.76375,
+      "far_rejection": 0.4875,
+      "far_fpr95": 0.5125
+    }
+  ],
+  "models": [
+    {
+      "model": "Vanilla",
+      "score": "MLS",
+      "closed_set_accuracy": 0.9446,
+      "auroc_near": 0.7870525625,
+      "auroc_far": 0.88416,
+      "auroc_all_unknowns": 0.83560628125,
+      "threshold": -5.804837536811826,
+      "known_test_acceptance": 0.9475,
+      "near_rejection": 0.3,
+      "near_fpr95": 0.7,
+      "far_rejection": 0.53125,
+      "far_fpr95": 0.46875
+    },
+    {
+      "model": "GCSC",
+      "score": "MLS",
+      "closed_set_accuracy": 0.9503,
+      "auroc_near": 0.8175837500000002,
+      "auroc_far": 0.912223125,
+      "auroc_all_unknowns": 0.8649034375000001,
+      "threshold": -6.111691093444823,
+      "known_test_acceptance": 0.9477,
+      "near_rejection": 0.35625,
+      "near_fpr95": 0.64375,
+      "far_rejection": 0.5775,
+      "far_fpr95": 0.4225
+    },
+    {
+      "model": "PROSER",
+      "score": "MLS",
+      "closed_set_accuracy": 0.9408,
+      "auroc_near": 0.7639820625,
+      "auroc_far": 0.85376875,
+      "auroc_all_unknowns": 0.80887540625,
+      "threshold": -4.662152194976806,
+      "known_test_acceptance": 0.9487,
+      "near_rejection": 0.26,
+      "near_fpr95": 0.74,
+      "far_rejection": 0.46625,
+      "far_fpr95": 0.53375
+    },
+    {
+      "model": "PROSER",
+      "score": "Placeholder",
+      "closed_set_accuracy": 0.9408,
+      "auroc_near": 0.7541470625000001,
+      "auroc_far": 0.8723912500000001,
+      "auroc_all_unknowns": 0.8132691562500001,
+      "threshold": 2.385058905929327e-08,
+      "known_test_acceptance": 0.9492,
+      "near_rejection": 0.2625,
+      "near_fpr95": 0.7375,
+      "far_rejection": 0.5,
+      "far_fpr95": 0.5
+    }
+  ],
+  "failure_near": [
+    {
+      "unknown_class": "bus",
+      "predicted_known_class": "automobile",
+      "score": -11.67944622039795,
+      "threshold": -5.804837536811826
+    },
+    {
+      "unknown_class": "wolf",
+      "predicted_known_class": "dog",
+      "score": -11.359954833984375,
+      "threshold": -5.804837536811826
+    },
+    {
+      "unknown_class": "fox",
+      "predicted_known_class": "cat",
+      "score": -11.355428695678711,
+      "threshold": -5.804837536811826
+    },
+    {
+      "unknown_class": "pickup_truck",
+      "predicted_known_class": "automobile",
+      "score": -11.181917190551758,
+      "threshold": -5.804837536811826
+    },
+    {
+      "unknown_class": "pickup_truck",
+      "predicted_known_class": "automobile",
+      "score": -11.0816011428833,
+      "threshold": -5.804837536811826
+    },
+    {
+      "unknown_class": "leopard",
+      "predicted_known_class": "cat",
+      "score": -11.002412796020508,
+      "threshold": -5.804837536811826
+    },
+    {
+      "unknown_class": "pickup_truck",
+      "predicted_known_class": "automobile",
+      "score": -10.919812202453613,
+      "threshold": -5.804837536811826
+    },
+    {
+      "unknown_class": "wolf",
+      "predicted_known_class": "cat",
+      "score": -10.919554710388184,
+      "threshold": -5.804837536811826
+    }
+  ],
+  "failure_far": [
+    {
+      "unknown_class": "keyboard",
+      "predicted_known_class": "bird",
+      "score": -12.776060104370117,
+      "threshold": -5.804837536811826
+    },
+    {
+      "unknown_class": "sunflower",
+      "predicted_known_class": "bird",
+      "score": -11.606748580932617,
+      "threshold": -5.804837536811826
+    },
+    {
+      "unknown_class": "keyboard",
+      "predicted_known_class": "truck",
+      "score": -11.52791976928711,
+      "threshold": -5.804837536811826
+    },
+    {
+      "unknown_class": "keyboard",
+      "predicted_known_class": "truck",
+      "score": -11.18523120880127,
+      "threshold": -5.804837536811826
+    },
+    {
+      "unknown_class": "keyboard",
+      "predicted_known_class": "truck",
+      "score": -11.00393295288086,
+      "threshold": -5.804837536811826
+    },
+    {
+      "unknown_class": "sunflower",
+      "predicted_known_class": "bird",
+      "score": -10.977097511291504,
+      "threshold": -5.804837536811826
+    },
+    {
+      "unknown_class": "bowl",
+      "predicted_known_class": "cat",
+      "score": -10.949666023254395,
+      "threshold": -5.804837536811826
+    },
+    {
+      "unknown_class": "chair",
+      "predicted_known_class": "airplane",
+      "score": -10.50491714477539,
+      "threshold": -5.804837536811826
+    }
+  ],
+  "vanilla_mls_threshold": -5.804837536811826,
+  "cache_dir": "kaggle_outputs\\t4_rest\\PA_1\\task4\\cache",
+  "runs": {
+    "vanilla": "results/t4_vanilla",
+    "gcsc": "results/t4_gcsc",
+    "proser": "results/t4_proser"
+  }
+}

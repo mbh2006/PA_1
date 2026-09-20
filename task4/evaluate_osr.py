@@ -150,7 +150,8 @@ def main(argv=None) -> None:
             margins = {}
             for split in ("val", "test", "near", "far"):
                 logits = cache[f"logits_{split}"]
-                margins[split] = logits[:, :num_known].max(axis=1) - logits[:, num_known:].max(axis=1)
+                # unknownness = (strongest dummy + bias) - strongest known
+                margins[split] = logits[:, num_known:].max(axis=1) - logits[:, :num_known].max(axis=1)
             bias = float(np.percentile(margins["val"], 95))
             placeholder_values = {split: margins[split] - bias for split in margins}
             row_ph = {
