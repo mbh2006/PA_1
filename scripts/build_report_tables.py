@@ -163,27 +163,45 @@ def task1_conflicts() -> List[Dict]:
     return rows
 
 
+def markdown_table(rows: List[Dict]) -> str:
+    if not rows:
+        return ""
+    keys = list(rows[0].keys())
+    lines = ["| " + " | ".join(keys) + " |", "|" + "---|" * len(keys)]
+    for row in rows:
+        cells = []
+        for key in keys:
+            value = row.get(key, "")
+            cells.append(f"{value:.4f}" if isinstance(value, float) else str(value))
+        lines.append("| " + " | ".join(cells) + " |")
+    return "\n".join(lines)
+
+
 def main() -> None:
     task2_rows = task2_table()
     task3_rows = task3_table()
+    task1_rows = task1_table()
+    conflict_rows = task1_conflicts()
     write_csv("task2_main_and_study.csv", task2_rows)
     write_csv("task3_main_and_study.csv", task3_rows)
-    write_csv("task1_conditions.csv", task1_table())
-    write_csv("task1_conflicts.csv", task1_conflicts())
+    write_csv("task1_conditions.csv", task1_rows)
+    write_csv("task1_conflicts.csv", conflict_rows)
     task4_tables()
 
     lines = ["# Result tables (auto-generated)\n"]
-    for title, rows in [("Task 2", task2_rows), ("Task 3", task3_rows)]:
+    sections = [("Task 1 - clean / interventions (per backbone)", task1_rows),
+                ("Task 1 - cue conflicts (shape bias + coverage)", conflict_rows),
+                ("Task 2 - main comparison and lambda_MMD study", task2_rows),
+                ("Task 3 - main comparison and rho study", task3_rows)]
+    task4_metrics = load_json(RESULTS / "t4_osr" / "osr_metrics.json")
+    if task4_metrics:
+        sections.append(("Task 4 - post-hoc scores on the vanilla model", task4_metrics["posthoc_vanilla"]))
+        sections.append(("Task 4 - model comparison (MLS + PROSER placeholder)", task4_metrics["models"]))
+    for title, rows in sections:
         if not rows:
             continue
-        keys = list(rows[0].keys())
         lines.append(f"\n## {title}\n")
-        lines.append("| " + " | ".join(keys) + " |")
-        lines.append("|" + "---|" * len(keys))
-        for row in rows:
-            lines.append("| " + " | ".join(
-                f"{row.get(k):.4f}" if isinstance(row.get(k), float) else str(row.get(k, ""))
-                for k in keys) + " |")
+        lines.append(markdown_table(rows))
     OUT.mkdir(parents=True, exist_ok=True)
     with open(OUT / "summary.md", "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines) + "\n")

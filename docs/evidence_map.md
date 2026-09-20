@@ -12,7 +12,7 @@ committed under `results/`) and, where useful, the command that regenerates it.
 | Translation curve | `results/task1/translation_curve.png` + `analysis.json` (`translation`) |
 | Representation stability per intervention | `analysis.json` (`stability`, cosine clean-vs-transformed) |
 | t-SNE / UMAP clean vs transformed | `results/task1/tsne_<backbone>_<condition>.png` |
-| Informative conflict examples | `task1/data/cue_conflicts/` (generated) + prediction counts in `analysis.json` |
+| Informative conflict examples | `report/figures/conflict_*.png` (6 examples) + prediction counts in `analysis.json` |
 
 Regenerate: `python -m task1.run_task1 --config task1/configs/base.yaml --stage all`
 (Kaggle kernel: `kaggle/kernels/t1_task1`).
