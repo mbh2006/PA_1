@@ -4,3 +4,7 @@ dann:
   hidden_dim: 256
   dropout: 0.5
   max_alpha: 1.0           # controlled study: {0.25, 0.5, 1}, same schedule shape
+  # Stability under the required frozen-BN policy: without normalising, the
+  # backbone inflates feature norms to maximise the domain loss and training
+  # diverges within the first epoch (documented in docs/methods_notes.md).
+  normalize_features: true

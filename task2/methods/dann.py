@@ -32,9 +32,20 @@ class DANN(Method):
         self.hidden_dim = int(dann_cfg.get("hidden_dim", 256))
         self.dropout = float(dann_cfg.get("dropout", 0.5))
         self.max_alpha = float(dann_cfg.get("max_alpha", 1.0))
+        # With BatchNorm running statistics frozen (assignment requirement), the
+        # backbone can increase the domain loss without bound by inflating feature
+        # norms, which makes the adversarial game diverge. L2-normalising the
+        # feature entering the discriminator removes that degenerate direction;
+        # the classification path still uses the unnormalised feature.
+        self.normalize_features = bool(dann_cfg.get("normalize_features", True))
         self.discriminator = DomainDiscriminator(
             in_dim=feature_dim, hidden_dim=self.hidden_dim, dropout=self.dropout
         ).to(device)
+
+    def _discriminator_input(self, features: torch.Tensor) -> torch.Tensor:
+        if self.normalize_features:
+            return F.normalize(features, dim=1)
+        return features
 
     def extra_parameters(self):
         return list(self.discriminator.parameters())
@@ -45,7 +56,11 @@ class DANN(Method):
 
         alpha = grl_alpha(progress, max_alpha=self.max_alpha)
         reversed_features = torch.cat(
-            [grad_reverse(features_s, alpha), grad_reverse(features_t, alpha)], dim=0
+            [
+                grad_reverse(self._discriminator_input(features_s), alpha),
+                grad_reverse(self._discriminator_input(features_t), alpha),
+            ],
+            dim=0,
         )
         domain_labels = torch.cat(
             [

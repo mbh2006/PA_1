@@ -9,7 +9,8 @@
   "enable_internet": true,
   "dataset_sources": [
     "mbh2006/pacs-dataset01",
-    "mbh2006/pa1-t2-erm"
+    "mbh2006/pa1-t2-erm-results",
+    "mbh2006/pa1-t2-erm-ckpt"
   ],
   "competition_sources": [],
   "kernel_sources": [],

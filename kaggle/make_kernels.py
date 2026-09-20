@@ -24,11 +24,11 @@ METHODS = [
     {"slug": "pa1-t2-source-only", "name": "t2_source_only", "config": "source_only",
      "title": "PA1 t2 source-only", "baseline": None},
     {"slug": "pa1-t2-dan", "name": "t2_dan", "config": "dan",
-     "title": "PA1 t2 dan", "baseline": "results/t2_source_only"},
+     "title": "PA1 t2 dan", "baseline": "t2_source_only"},
     {"slug": "pa1-t2-dann", "name": "t2_dann", "config": "dann",
-     "title": "PA1 t2 dann", "baseline": "results/t2_source_only"},
+     "title": "PA1 t2 dann", "baseline": "t2_source_only"},
     {"slug": "pa1-t2-cdan", "name": "t2_cdan", "config": "cdan",
-     "title": "PA1 t2 cdan", "baseline": "results/t2_source_only"},
+     "title": "PA1 t2 cdan", "baseline": "t2_source_only"},
 ]
 
 MAIN_TEMPLATE = '''"""Kaggle script-kernel for Task 2 method: {config}.
@@ -53,8 +53,9 @@ REPO_DIR = "/kaggle/working/PA_1"
 METHOD = "{config}"
 RUN_ID = "{name}"
 CONFIG = "task2/configs/{config}.yaml"
-BASELINE_RUN = {baseline!r}          # relative path inside results/, or None
-BASELINE_DATASET = "/kaggle/input/pa1-t2-erm"  # attached for target-aware methods
+BASELINE_RUN = {baseline!r}          # run id inside results/, or None
+BASELINE_RESULTS_DATASET = "/kaggle/input/pa1-t2-erm-results"
+BASELINE_CKPT_DATASET = "/kaggle/input/pa1-t2-erm-ckpt"
 
 
 def run(command):
@@ -90,10 +91,13 @@ def main():
     run([sys.executable, "-m", "pip", "install", "-q", "pyyaml", "scikit-learn", "tqdm"])
 
     # baseline results (final_metrics.json) needed for the delta-vs-source-only table
-    if BASELINE_RUN and os.path.isdir(os.path.join(BASELINE_DATASET, "results")):
-        os.makedirs("results", exist_ok=True)
-        shutil.copytree(os.path.join(BASELINE_DATASET, "results"), "results", dirs_exist_ok=True)
-        print("copied baseline results from", BASELINE_DATASET, flush=True)
+    if BASELINE_RUN and os.path.isdir(BASELINE_RESULTS_DATASET):
+        destination = os.path.join("results", BASELINE_RUN)
+        os.makedirs(destination, exist_ok=True)
+        for filename in os.listdir(BASELINE_RESULTS_DATASET):
+            shutil.copy2(os.path.join(BASELINE_RESULTS_DATASET, filename),
+                         os.path.join(destination, filename))
+        print("copied baseline results into", destination, flush=True)
 
     data_root = find_data_root()
     print("data root:", data_root, flush=True)
@@ -149,7 +153,7 @@ def main() -> None:
         )
         dataset_sources = [PACS_DATASET]
         if method["baseline"]:
-            dataset_sources.append(ERM_DATASET)
+            dataset_sources += [f"{USER}/pa1-t2-erm-results", f"{USER}/pa1-t2-erm-ckpt"]
         metadata = {
             "id": f"{USER}/{method['slug']}",
             "title": method["title"],

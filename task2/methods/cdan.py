@@ -33,6 +33,8 @@ class CDAN(Method):
         self.hidden_dim = int(cdan_cfg.get("hidden_dim", 256))
         self.dropout = float(cdan_cfg.get("dropout", 0.5))
         self.max_alpha = float(cdan_cfg.get("max_alpha", 1.0))
+        # See DANN for why the feature entering the domain head is normalised.
+        self.normalize_features = bool(cdan_cfg.get("normalize_features", True))
         self.discriminator = DomainDiscriminator(
             in_dim=feature_dim * num_classes, hidden_dim=self.hidden_dim, dropout=self.dropout
         ).to(device)
@@ -49,6 +51,10 @@ class CDAN(Method):
     def compute(self, model, batch, progress):
         logits_s, features_s, cls_loss = self.source_classification(model, batch)
         logits_t, features_t = model(batch["target_x"])
+
+        if self.normalize_features:
+            features_s = F.normalize(features_s, dim=1)
+            features_t = F.normalize(features_t, dim=1)
 
         g_s = self._conditioned(features_s, logits_s)
         g_t = self._conditioned(features_t, logits_t)

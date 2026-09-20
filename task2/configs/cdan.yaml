@@ -4,3 +4,5 @@ cdan:
   hidden_dim: 256
   dropout: 0.5
   max_alpha: 1.0
+  # Same stability measure as DANN (see dann.yaml / docs/methods_notes.md).
+  normalize_features: true
