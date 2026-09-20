@@ -102,7 +102,15 @@ Checkpoints live in `checkpoints/<run_id>/{best,last}.pt` and are git-ignored.
 
 1. Upload PACS once as a private dataset (or run `prepare_pacs --from-hf` in a
    notebook with internet enabled) and mount it at `/kaggle/input/...`.
-2. In each notebook: `git clone <repo>`, `cd` into it, `pip install -r requirements.txt`.
+2. In each notebook: `git clone <repo>`, `cd` into it, then install only the
+   extras Kaggle does not already ship:
+
+```bash
+pip install PyYAML scikit-learn tqdm datasets
+```
+
+   (torch, torchvision, numpy, pandas and matplotlib are preinstalled; keep
+   internet ON the first time so the `IMAGENET1K_V1` weights can download.)
 3. Run **one method per notebook commit** so a failure costs one run, not all.
    Example:
 
