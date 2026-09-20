@@ -6,10 +6,16 @@ invariant to, and reject:
 
 | Task | Topic | Status |
 |------|--------------------------------------------|--------|
-| 1 | Inductive biases: shape / texture / colour / spatial structure (STL-10; ResNet-50, ViT-B/16, CLIP) | planned |
-| 2 | Unsupervised domain adaptation on PACS (Target = Sketch): Source-only, DAN, DANN, CDAN | implemented, running |
-| 3 | Domain generalisation on PACS (Sketch unseen): ERM (reused from T2), DAN-DG, SAM | implemented, running |
-| 4 | Open-set recognition (CIFAR-10 known vs CIFAR-100 unknowns): MSP/MLS/Energy/Mahalanobis, GCSC, PROSER | planned |
+| 1 | Inductive biases: shape / texture / colour / spatial structure (STL-10; ResNet-50, ViT-B/16, CLIP) | implemented, running |
+| 2 | Unsupervised domain adaptation on PACS (Target = Sketch): Source-only, DAN, DANN, CDAN | implemented, results in `results/t2_*` |
+| 3 | Domain generalisation on PACS (Sketch unseen): ERM (reused from T2), DAN-DG, SAM | implemented, results in `results/t3_*` |
+| 4 | Open-set recognition (CIFAR-10 known vs CIFAR-100 unknowns): MSP/MLS/Energy/Mahalanobis, GCSC, PROSER | implemented, running |
+
+Report-side pointers: `results/report_tables/summary.md` (auto-assembled tables),
+`docs/evidence_map.md` (required evidence -> artefact), `docs/methods_notes.md`
+(method and design-decision notes, including the frozen-BatchNorm stability
+findings that required L2-normalising the features entering every alignment
+objective).
 
 ## Repository layout
 
@@ -162,6 +168,36 @@ python -m task3.evaluation.sharpness --model-run results/t3_sam
 `eps = 0.05 * grad / ||grad||` on a fixed 32-per-domain batch (seed 6304);
 `source_domain_separability.json` reports three-way held-out accuracy of a
 logistic probe on the source validation features (chance 33.3%).
+
+## Task 4 - open-set recognition (CIFAR-10 vs CIFAR-100)
+
+```bash
+python -m task4.train --config task4/configs/vanilla.yaml
+python -m task4.train --config task4/configs/gcsc.yaml
+python -m task4.train --config task4/configs/proser.yaml --init-ckpt checkpoints/t4_vanilla/best.pt
+python -m task4.extract_outputs --run-dir results/t4_vanilla    # + gcsc, proser
+python -m task4.evaluate_osr --vanilla-run results/t4_vanilla \
+    --gcsc-run results/t4_gcsc --proser-run results/t4_proser
+```
+
+Scores: MSP / MLS / Energy on the known logits, diagonal-covariance
+Mahalanobis from unaugmented training features, and the PROSER placeholder
+margin calibrated on validation. Thresholds are the 95th percentile of
+unknownness on CIFAR-10 validation; CIFAR-100 images are used for evaluation
+only, never for training, checkpoint selection, score design or thresholds.
+
+## Task 1 - inductive biases (STL-10)
+
+```bash
+python -m task1.run_task1 --config task1/configs/base.yaml --stage all
+```
+
+Stages: `prepare` (80/20 split + balanced 500-image test subset, seed 6304),
+`conflicts` (AdaIN style transfer with a model-free rejection rule),
+`cache` (frozen features for clean / grayscale / hue / patch-shuffle /
+translations / conflicts), `heads` (linear probes per backbone), `analysis`
+(accuracy, macro-F1, mean confidence, prediction consistency, shape bias and
+coverage, representation stability, translation curve, t-SNE figures).
 
 ## Kaggle kernels (API-driven)
 
