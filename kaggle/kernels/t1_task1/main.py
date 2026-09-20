@@ -24,7 +24,7 @@ STATUS = "/kaggle/working/STATUS.txt"
 
 
 def log_status(message):
-    with open(STATUS, "w", encoding="utf-8") as fh:
+    with open(STATUS, "a", encoding="utf-8") as fh:
         fh.write(message + "\n")
     print("STATUS:", message, flush=True)
 
@@ -32,6 +32,18 @@ def log_status(message):
 def run(command):
     print("+", " ".join(command), flush=True)
     subprocess.run(command, check=True)
+
+
+def run_captured(label, command, timeout=None):
+    """Run a command, mirroring its combined output into STATUS."""
+    log_status("run: " + label)
+    completed = subprocess.run(command, capture_output=True, text=True, timeout=timeout)
+    tail = ((completed.stdout or "") + (completed.stderr or "")).strip()[-2000:]
+    if tail:
+        log_status(f"{label} rc={completed.returncode} output tail:\n{tail}")
+    if completed.returncode != 0:
+        raise SystemExit(f"{label} failed with rc={completed.returncode}")
+    return completed
 
 
 def find_dir(name, sentinel):
@@ -49,28 +61,35 @@ def pipeline():
     subprocess.run(["nvidia-smi", "-L"])
     subprocess.run(["df", "-h"])
     if not os.path.isdir(REPO_DIR):
-        run(["git", "clone", REPO_URL, REPO_DIR])
+        run_captured("git clone", ["git", "clone", REPO_URL, REPO_DIR])
     os.chdir(REPO_DIR)
-    log_status("installing dependencies")
-    run([sys.executable, "-m", "pip", "install", "-q", "pyyaml", "scikit-learn", "tqdm"])
-    # Validated on Kaggle (CPU and GPU workers): installing open_clip with
-    # dependencies can drag in a new torch/CUDA stack and kill the session.
-    run([sys.executable, "-m", "pip", "install", "-q", "--no-deps", "open_clip_torch"])
-    run([sys.executable, "-m", "pip", "install", "-q", "--no-deps",
-         "ftfy", "regex", "timm", "safetensors", "huggingface_hub"])
-    run([sys.executable, "-c", "import open_clip; print('open_clip', open_clip.__version__)"])
+    run_captured("pip base", [sys.executable, "-m", "pip", "install", "-q",
+                              "pyyaml", "scikit-learn", "tqdm"])
+    # Validated on Kaggle CPU and GPU workers: installing open_clip with its
+    # dependencies can pull a new torch/CUDA stack and kill the session.
+    run_captured("pip open_clip", [sys.executable, "-m", "pip", "install", "-q", "--no-deps",
+                                   "open_clip_torch"])
+    run_captured("pip open_clip deps", [sys.executable, "-m", "pip", "install", "-q", "--no-deps",
+                                        "ftfy", "regex", "timm", "safetensors", "huggingface_hub"])
+    run_captured("import open_clip", [sys.executable, "-c",
+                                      "import open_clip; print('open_clip', open_clip.__version__)"])
 
     # Read STL-10 directly from the read-only dataset mount: copying the 2.6 GB
     # folder into the working disk is what killed earlier sessions (hard SIGKILL
     # with no traceback when the working disk filled up).
     stl = find_dir("stl10_binary", "train_X.bin")
     data_root = os.path.dirname(stl)
-    log_status("using read-only STL-10 mount " + data_root)
+    log_status("starting pipeline | data_root=" + data_root)
 
-    run([sys.executable, "-m", "task1.run_task1", "--config", "task1/configs/base.yaml",
-         "--stage", "all", "--device", "cuda", "--batch-size", "32",
-         "--data-root", data_root])
-    log_status("task1 pipeline done")
+    log_path = "/kaggle/working/pipeline.log"
+    with open(log_path, "w", encoding="utf-8") as fh:
+        completed = subprocess.run(
+            [sys.executable, "-u", "-m", "task1.run_task1", "--config", "task1/configs/base.yaml",
+             "--stage", "all", "--device", "cuda", "--batch-size", "32", "--data-root", data_root],
+            stdout=fh, stderr=subprocess.STDOUT, timeout=None)
+    log_status(f"pipeline rc={completed.returncode}")
+    if completed.returncode != 0:
+        raise SystemExit(f"task1 pipeline failed rc={completed.returncode} (see pipeline.log)")
 
     # keep the frozen subsets and the cue-conflict manifest in the output
     for relative in ("task1/data/subsets_stl10_seed6304.json",
@@ -86,7 +105,7 @@ def main():
     try:
         pipeline()
     except Exception:
-        with open(STATUS, "w", encoding="utf-8") as fh:
+        with open(STATUS, "a", encoding="utf-8") as fh:
             fh.write(traceback.format_exc())
         raise
 
