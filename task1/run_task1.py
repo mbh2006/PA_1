@@ -46,6 +46,7 @@ def parse_args(argv=None):
     parser.add_argument("--stage", default="all",
                         choices=["prepare", "conflicts", "cache", "heads", "analysis", "all"])
     parser.add_argument("--device", default=None)
+    parser.add_argument("--data-root", default=None, help="override cfg['data_root']")
     parser.add_argument("--limit", type=int, default=None, help="cap eval images (smoke)")
     parser.add_argument("--backbones", default=None, help="comma-separated subset (smoke)")
     parser.add_argument("--batch-size", type=int, default=32)
@@ -387,6 +388,8 @@ def stage_analysis(cfg, args, subsets) -> None:
 def main(argv=None) -> None:
     args = parse_args(argv)
     cfg = load_config(args.config)
+    if args.data_root:
+        cfg["data_root"] = args.data_root
     set_seed(cfg["seed"])
     logger = get_logger()
     logger.info("task1 stage=%s config_hash=%s", args.stage, config_hash(cfg))

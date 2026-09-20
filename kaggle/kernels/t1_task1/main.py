@@ -47,28 +47,37 @@ def find_dir(name, sentinel):
 def pipeline():
     log_status("start")
     subprocess.run(["nvidia-smi", "-L"])
+    subprocess.run(["df", "-h"])
     if not os.path.isdir(REPO_DIR):
         run(["git", "clone", REPO_URL, REPO_DIR])
     os.chdir(REPO_DIR)
     log_status("installing dependencies")
     run([sys.executable, "-m", "pip", "install", "-q", "pyyaml", "scikit-learn", "tqdm"])
-    # Validated on Kaggle: installing open_clip with dependencies can drag in a
-    # new torch/CUDA stack and kill the session; --no-deps plus the pure-python
-    # dependencies is stable and fast.
+    # Validated on Kaggle (CPU and GPU workers): installing open_clip with
+    # dependencies can drag in a new torch/CUDA stack and kill the session.
     run([sys.executable, "-m", "pip", "install", "-q", "--no-deps", "open_clip_torch"])
     run([sys.executable, "-m", "pip", "install", "-q", "--no-deps",
          "ftfy", "regex", "timm", "safetensors", "huggingface_hub"])
     run([sys.executable, "-c", "import open_clip; print('open_clip', open_clip.__version__)"])
 
+    # Read STL-10 directly from the read-only dataset mount: copying the 2.6 GB
+    # folder into the working disk is what killed earlier sessions (hard SIGKILL
+    # with no traceback when the working disk filled up).
     stl = find_dir("stl10_binary", "train_X.bin")
-    os.makedirs("data/stl10", exist_ok=True)
-    shutil.copytree(stl, "data/stl10/stl10_binary", dirs_exist_ok=True)
-    log_status("staged STL-10")
+    data_root = os.path.dirname(stl)
+    log_status("using read-only STL-10 mount " + data_root)
 
     run([sys.executable, "-m", "task1.run_task1", "--config", "task1/configs/base.yaml",
-         "--stage", "all", "--device", "cuda", "--batch-size", "32"])
+         "--stage", "all", "--device", "cuda", "--batch-size", "32",
+         "--data-root", data_root])
     log_status("task1 pipeline done")
 
+    # keep the frozen subsets and the cue-conflict manifest in the output
+    for relative in ("task1/data/subsets_stl10_seed6304.json",
+                     "task1/data/cue_conflicts/manifest.json"):
+        source = os.path.join(REPO_DIR, relative)
+        if os.path.exists(source):
+            shutil.copy2(source, "/kaggle/working/" + os.path.basename(relative))
     shutil.make_archive("/kaggle/working/results_task1", "zip", "results", "task1")
     log_status("DONE")
 
