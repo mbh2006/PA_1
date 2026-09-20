@@ -1,0 +1,27 @@
+# --- data and checkpoints never go into git ---
+data/
+checkpoints/
+checkpoints_smoke/
+results_smoke/
+*.pth
+*.pt
+
+# --- course handout: do not redistribute ---
+ATML-PA1.pdf
+PA 0.pdf
+
+# --- python / notebooks ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.ipynb_checkpoints/
+wandb/
+runs/
+
+# --- OS noise ---
+.DS_Store
+Thumbs.db
+desktop.ini

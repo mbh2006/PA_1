@@ -1,0 +1,5 @@
+inherit: base.yaml
+method: dan
+dan:
+  lambda_mmd: 1.0          # main comparison uses 1; controlled study: {0.1, 1, 10}
+  kernels: [0.5, 1.0, 2.0] # multipliers on the median squared distance

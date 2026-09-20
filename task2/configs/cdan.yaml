@@ -1,0 +1,6 @@
+inherit: base.yaml
+method: cdan
+cdan:
+  hidden_dim: 256
+  dropout: 0.5
+  max_alpha: 1.0

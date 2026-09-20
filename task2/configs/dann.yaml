@@ -1,0 +1,6 @@
+inherit: base.yaml
+method: dann
+dann:
+  hidden_dim: 256
+  dropout: 0.5
+  max_alpha: 1.0           # controlled study: {0.25, 0.5, 1}, same schedule shape

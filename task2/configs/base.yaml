@@ -1,0 +1,28 @@
+# Shared Task 2 settings. Method files inherit from this file and only override
+# what makes them different. Every run saves its merged config next to its
+# results, so reported numbers stay traceable.
+method: source_only
+data_root: data/pacs
+splits: shared/splits/pacs_sketch_seed6304.json
+target_domain: sketch
+
+seed: 6304
+train_frac: 0.8
+num_classes: 7
+
+# preprocessing / augmentation (fixed for every method)
+resize_size: 256
+crop_size: 224
+
+# domain-balanced batch: 8 + 8 + 8 source examples (+ 24 target in Task 2)
+batch_size_per_domain: 8
+target_batch_size: 24
+
+max_epochs: 30
+early_stop_patience: 5
+num_workers: 4
+
+optimizer:
+  name: adamw
+  lr: 1.0e-4
+  weight_decay: 1.0e-4
