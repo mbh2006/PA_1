@@ -65,15 +65,19 @@
 | translate_down_32 | vit_b16 | 0.9760 | 0.9760 | 0.9428 | 0.9900 | 0.9393 |
 | translate_down_32 | clip_vit_b32 | 0.9560 | 0.9555 | 0.1992 | 0.9740 | 0.9720 |
 | translate_down_32 | clip_vit_b32_zero_shot | 0.9280 | 0.9250 | 0.9224 | 0.9700 | 0.9720 |
+| clean | resnet50 | 0.9820 | 0.9820 | 0.8841 | 1.0000 | 1.0000 |
+| clean | vit_b16 | 0.9840 | 0.9840 | 0.9484 | 1.0000 | 1.0000 |
+| clean | clip_vit_b32 | 0.9760 | 0.9757 | 0.2073 | 1.0000 | 1.0000 |
+| clean | clip_vit_b32_zero_shot | 0.9480 | 0.9459 | 0.9344 | 1.0000 | 1.0000 |
 
 ## Task 1 - cue conflicts (shape bias + coverage)
 
 | backbone | predictor | shape | texture | other | total | shape_bias | coverage |
 |---|---|---|---|---|---|---|---|
-| resnet50 | head | 87 | 17 | 19 | 123 | 83.6538 | 84.5528 |
-| vit_b16 | head | 112 | 4 | 7 | 123 | 96.5517 | 94.3089 |
-| clip_vit_b32 | head | 111 | 3 | 9 | 123 | 97.3684 | 92.6829 |
-| clip_vit_b32 | zero_shot | 105 | 6 | 12 | 123 | 94.5946 | 90.2439 |
+| resnet50 | head | 200 | 27 | 36 | 263 | 88.1057 | 86.3118 |
+| vit_b16 | head | 239 | 8 | 16 | 263 | 96.7611 | 93.9163 |
+| clip_vit_b32 | head | 225 | 12 | 26 | 263 | 94.9367 | 90.1141 |
+| clip_vit_b32 | zero_shot | 217 | 18 | 28 | 263 | 92.3404 | 89.3536 |
 
 ## Task 2 - main comparison and lambda_MMD study
 
