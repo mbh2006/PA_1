@@ -1,0 +1,13 @@
+# Local CPU smoke configuration: fake STL-10 (ImageFolder backend), one backbone.
+inherit: base.yaml
+dataset: imagefolder
+data_root: data/fake_stl10
+subsets: task1/data/subsets_fake_stl10_seed6304.json
+backbones: [resnet50]
+conflict_pairs:
+  - [airplane, bird]
+conflict_per_direction: 1
+conflict_steps: 30
+conflicts_dir: task1/data/fake_conflicts
+cache_dir: task1/cache_smoke
+results_dir: results_smoke/task1

@@ -1,0 +1,30 @@
+# Task 1 shared configuration (STL-10 + three frozen backbones).
+dataset: stl10
+data_root: data/stl10
+subsets: task1/data/subsets_stl10_seed6304.json
+seed: 6304
+common_size: 224
+
+backbones: [resnet50, vit_b16, clip_vit_b32]
+
+head:
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  max_epochs: 50
+  patience: 5
+  batch_size: 256
+
+# cue-conflict class pairs (both directions generated where feasible)
+conflict_pairs:
+  - [airplane, bird]
+  - [car, cat]
+  - [deer, dog]
+  - [horse, monkey]
+  - [ship, truck]
+  - [bird, monkey]
+conflict_per_direction: 25
+conflict_steps: 150
+
+conflicts_dir: task1/data/cue_conflicts
+cache_dir: task1/cache
+results_dir: results/task1
