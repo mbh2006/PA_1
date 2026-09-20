@@ -1,0 +1,9 @@
+{
+  "run_id": "t4_vanilla",
+  "method": "vanilla",
+  "seed": 6304,
+  "config_hash": "fa49c85382",
+  "best_val_accuracy": 0.9468,
+  "epochs_ran": 100,
+  "best_checkpoint": "checkpoints/t4_vanilla/best.pt"
+}
