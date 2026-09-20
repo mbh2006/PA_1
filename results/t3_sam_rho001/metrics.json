@@ -1,0 +1,27 @@
+{
+  "run_id": "t3_sam_rho001",
+  "method": "sam",
+  "seed": 6304,
+  "config_hash": "df56cd889f",
+  "best_mean_source_f1": 0.9457536655704271,
+  "best_row": {
+    "epoch": 7,
+    "train_loss": 0.08727238930249819,
+    "train_cls_loss": 0.04899106809996249,
+    "train_mmd": null,
+    "val_mean_acc": 0.9492060286160279,
+    "val_mean_f1": 0.9457536655704271,
+    "val_worst_f1": 0.9305382671676672,
+    "epoch_time_s": 36.43564772605896,
+    "val_photo_acc": 0.9703264094955489,
+    "val_photo_f1": 0.9655102999389669,
+    "val_art_painting_acc": 0.9367396593673966,
+    "val_art_painting_f1": 0.9305382671676672,
+    "val_cartoon_acc": 0.940552016985138,
+    "val_cartoon_f1": 0.9412124296046472
+  },
+  "epochs_ran": 12,
+  "steps_per_epoch": 201,
+  "device": "cuda",
+  "best_checkpoint": "checkpoints/t3_sam_rho001/best.pt"
+}

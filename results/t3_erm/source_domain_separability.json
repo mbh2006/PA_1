@@ -1,0 +1,9 @@
+{
+  "model_run": "t2_source_only",
+  "checkpoint": "checkpoints\\t2_source_only\\best.pt",
+  "score": 0.8618421052631579,
+  "chance": 0.3333333333333333,
+  "n_per_domain": 337,
+  "n_features": 512,
+  "seed": 6304
+}

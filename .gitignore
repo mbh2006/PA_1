@@ -1,10 +1,15 @@
 # --- data and checkpoints never go into git ---
-data/
+/data/
+task1/data/cue_conflicts/
+task1/data/fake_conflicts/
+task1/cache/
+task1/cache_smoke/
+task4/cache/
+task4/cache_smoke/
 checkpoints/
 checkpoints_smoke/
 results_smoke/
 kaggle_outputs/
-task4/cache/
 *.pth
 *.pt
 

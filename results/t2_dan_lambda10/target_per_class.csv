@@ -1,0 +1,8 @@
+class,support,correct,accuracy
+dog,772,0,0.0
+elephant,740,0,0.0
+giraffe,753,0,0.0
+guitar,608,0,0.0
+horse,816,0,0.0
+house,80,14,0.175
+person,160,126,0.7875

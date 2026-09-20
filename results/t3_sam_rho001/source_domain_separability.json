@@ -1,0 +1,9 @@
+{
+  "model_run": "t3_sam_rho001",
+  "checkpoint": "checkpoints/t3_sam_rho001/best.pt",
+  "score": 0.8519736842105263,
+  "chance": 0.3333333333333333,
+  "n_per_domain": 337,
+  "n_features": 512,
+  "seed": 6304
+}

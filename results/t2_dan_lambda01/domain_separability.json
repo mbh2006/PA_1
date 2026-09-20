@@ -1,0 +1,12 @@
+{
+  "run_id": "t2_dan_lambda01",
+  "method": "dan",
+  "score": 0.9918032786885246,
+  "chance": 0.5,
+  "n_features": 512,
+  "n_per_domain_class": 1219,
+  "n_train": 1706,
+  "n_test": 732,
+  "seed": 6304,
+  "checkpoint": "checkpoints/t2_dan_lambda01/best.pt"
+}

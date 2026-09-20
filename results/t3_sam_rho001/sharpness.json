@@ -1,0 +1,11 @@
+{
+  "model_run": "t3_sam_rho001",
+  "checkpoint": "checkpoints/t3_sam_rho001/best.pt",
+  "sharpness_delta": 0.21627943217754364,
+  "loss_clean": 0.2101103514432907,
+  "loss_perturbed": 0.42638978362083435,
+  "radius": 0.05,
+  "examples_per_domain": 32,
+  "seed": 6304,
+  "grad_norm": 3.6638808250427246
+}

@@ -1,0 +1,11 @@
+{
+  "model_run": "t2_source_only",
+  "checkpoint": "checkpoints\\t2_source_only\\best.pt",
+  "sharpness_delta": 0.2725674510002136,
+  "loss_clean": 0.16555947065353394,
+  "loss_perturbed": 0.43812692165374756,
+  "radius": 0.05,
+  "examples_per_domain": 32,
+  "seed": 6304,
+  "grad_norm": 4.839946269989014
+}

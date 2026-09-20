@@ -1,0 +1,13 @@
+true_class,predicted_class,count,share_of_true_class
+horse,person,762,0.9338235294117647
+elephant,person,713,0.9635135135135136
+giraffe,person,699,0.9282868525896414
+dog,person,695,0.9002590673575129
+guitar,person,492,0.8092105263157895
+guitar,house,116,0.19078947368421054
+dog,house,77,0.09974093264248704
+house,person,66,0.825
+giraffe,house,54,0.07171314741035857
+horse,house,54,0.0661764705882353
+person,house,34,0.2125
+elephant,house,27,0.03648648648648649
