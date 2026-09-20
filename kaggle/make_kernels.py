@@ -394,18 +394,19 @@ def run_captured(label, command, timeout=None):
     if tail:
         log_status(f"{label} rc={completed.returncode} output tail:\\n{tail}")
     if completed.returncode != 0:
-        raise SystemExit(f"{label} failed with rc={completed.returncode}")
+        raise RuntimeError(f"{label} failed with rc={completed.returncode}")
     return completed
 
 
 def find_dir(name, sentinel):
-    patterns = [f"/kaggle/input/{{name}}", f"/kaggle/input/*/{{name}}",
-                f"/kaggle/input/*/*/{{name}}", f"/kaggle/input/*/*/*/{{name}}"]
+    patterns = [f"/kaggle/input/{name}", f"/kaggle/input/*/{name}",
+                f"/kaggle/input/*/*/{name}", f"/kaggle/input/*/*/*/{name}",
+                f"/kaggle/input/*/*/*/*/{name}"]
     for pattern in patterns:
         for candidate in glob.glob(pattern):
             if os.path.exists(os.path.join(candidate, sentinel)):
                 return candidate
-    raise SystemExit(f"dataset folder {{name}} (with {{sentinel}}) not found under /kaggle/input")
+    raise RuntimeError(f"dataset folder {name} (with {sentinel}) not found under /kaggle/input")
 
 
 def pipeline():
@@ -456,7 +457,7 @@ def pipeline():
 def main():
     try:
         pipeline()
-    except Exception:
+    except BaseException:
         with open(STATUS, "a", encoding="utf-8") as fh:
             fh.write(traceback.format_exc())
         raise
