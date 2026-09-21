@@ -133,6 +133,33 @@ are kept as documented failures (`results/` history files); the same
 normalisation is what makes the Task 2 vs Task 3 "target access" comparison
 fair.
 
+## Task 1 - cue-conflict representation stability (the pairing)
+
+The assignment requires cosine stability between each transformed image and its
+clean counterpart for grayscale, cue conflict, translation and patch shuffle.
+Grayscale/hue/translation/shuffle are derived from test-subset images, so the
+clean and transformed features live in the same cached file and are paired by
+position.
+
+Cue conflicts are *generated*: a content image from class A is stylised with a
+style image from class B, so there is no "transformed version of a test image"
+to pair. The pairing used here is content image vs conflict image:
+
+1. `make_cue_conflicts.py` records, for every accepted conflict, the STL-10
+   index of its content and style source images in `manifest.json`
+   (`items[].content_index`).
+2. `run_task1.py` (`_conflict_stability`) maps that index to the row of the
+   already-cached clean train features (`<backbone>_train.npz`, whose `indices`
+   array holds the original STL-10 index of each cached image) and computes
+   `cos(f(content), f(conflict))`, averaged over accepted conflicts whose
+   content image is present in the cache.
+3. The value is stored as `stability.conflict.<backbone>` in
+   `results/task1/analysis.json`.
+
+No new forward passes are needed (train features were already extracted for the
+linear probes), and the pairing is model-free: it uses the generator's record,
+not any model prediction.
+
 ## What to inspect when real results arrive
 
 * **Curves** (`curves_train.png`, `curves_val.png`): does the discriminator
