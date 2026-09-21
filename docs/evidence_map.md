@@ -10,7 +10,7 @@ committed under `results/`) and, where useful, the command that regenerates it.
 | Clean / grayscale / extra-colour / patch-shuffle comparison | `results/task1/analysis.json` (`conditions`) and `results/report_tables/task1_conditions.csv` |
 | Shape / texture / other counts + shape bias + coverage | `results/task1/analysis.json` (`conflicts`) and `results/report_tables/task1_conflicts.csv` |
 | Translation curve | `results/task1/translation_curve.png` + `analysis.json` (`translation`) |
-| Representation stability per intervention | `analysis.json` (`stability`, cosine clean-vs-transformed) |
+| Representation stability per intervention | `analysis.json` (`stability`, cosine clean-vs-transformed) - includes grayscale, hue, patch shuffle, all translations and **cue conflicts** (paired with their clean content image) |
 | t-SNE / UMAP clean vs transformed | `results/task1/tsne_<backbone>_<condition>.png` |
 | Informative conflict examples | `report/figures/conflict_*.png` (6 examples) + prediction counts in `analysis.json` |
 

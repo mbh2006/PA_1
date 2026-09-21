@@ -19,14 +19,15 @@ frozen-BatchNorm stability findings).
 ## Results at a glance
 
 **Task 1 - accuracy on the 500-image balanced test subset and cue-conflict summary**
-(263 accepted conflicts, 397 rejected by the model-free rule).
+(265 accepted conflicts, 395 rejected by the model-free rule; "conflict stability" is
+the cosine similarity between each accepted conflict and its clean content image).
 
-| Model | Clean | Grayscale | Hue rot. | Patch shuffle | Shape bias | Coverage |
-|---|---|---|---|---|---|---|
-| ResNet-50 (V2) | 0.982 | 0.968 | 0.940 | 0.900 | 88.1% | 86.3% |
-| ViT-B/16 | 0.984 | 0.960 | 0.968 | 0.912 | 96.8% | 93.9% |
-| CLIP linear head | 0.976 | 0.954 | 0.956 | 0.798 | 94.9% | 90.1% |
-| CLIP zero-shot | 0.948 | 0.928 | 0.930 | 0.782 | 92.3% | 89.4% |
+| Model | Clean | Grayscale | Hue rot. | Patch shuffle | Shape bias | Coverage | Conflict stability |
+|---|---|---|---|---|---|---|---|
+| ResNet-50 (V2) | 0.982 | 0.968 | 0.940 | 0.900 | 87.3% | 86.4% | 0.571 |
+| ViT-B/16 | 0.984 | 0.960 | 0.968 | 0.912 | 98.0% | 94.3% | 0.587 |
+| CLIP linear head | 0.976 | 0.954 | 0.956 | 0.798 | 94.5% | 89.8% | 0.798 |
+| CLIP zero-shot | 0.948 | 0.928 | 0.930 | 0.782 | 92.1% | 90.2% | - |
 
 **Task 2 - PACS -> Sketch**
 

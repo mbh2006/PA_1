@@ -72,12 +72,12 @@
 
 ## Task 1 - cue conflicts (shape bias + coverage)
 
-| backbone | predictor | shape | texture | other | total | shape_bias | coverage |
-|---|---|---|---|---|---|---|---|
-| resnet50 | head | 200 | 27 | 36 | 263 | 88.1057 | 86.3118 |
-| vit_b16 | head | 239 | 8 | 16 | 263 | 96.7611 | 93.9163 |
-| clip_vit_b32 | head | 225 | 12 | 26 | 263 | 94.9367 | 90.1141 |
-| clip_vit_b32 | zero_shot | 217 | 18 | 28 | 263 | 92.3404 | 89.3536 |
+| backbone | predictor | cosine_stability | shape | texture | other | total | shape_bias | coverage |
+|---|---|---|---|---|---|---|---|---|
+| resnet50 | head | 0.5713 | 200 | 29 | 36 | 265 | 87.3362 | 86.4151 |
+| vit_b16 | head | 0.5875 | 245 | 5 | 15 | 265 | 98.0000 | 94.3396 |
+| clip_vit_b32 | head | 0.7980 | 225 | 13 | 27 | 265 | 94.5378 | 89.8113 |
+| clip_vit_b32 | zero_shot | 0.7980 | 220 | 19 | 26 | 265 | 92.0502 | 90.1887 |
 
 ## Task 2 - main comparison and lambda_MMD study
 

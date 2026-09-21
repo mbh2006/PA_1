@@ -5,89 +5,1438 @@
       "style_class": "bird",
       "candidates": 55,
       "accepted": 19,
-      "rejected": 36
+      "rejected": 36,
+      "items": [
+        {
+          "file": "airplane_content_bird_style_000.png",
+          "content_index": 1627,
+          "style_index": 4974
+        },
+        {
+          "file": "airplane_content_bird_style_001.png",
+          "content_index": 2978,
+          "style_index": 1837
+        },
+        {
+          "file": "airplane_content_bird_style_002.png",
+          "content_index": 368,
+          "style_index": 4076
+        },
+        {
+          "file": "airplane_content_bird_style_003.png",
+          "content_index": 2719,
+          "style_index": 1699
+        },
+        {
+          "file": "airplane_content_bird_style_004.png",
+          "content_index": 4043,
+          "style_index": 1680
+        },
+        {
+          "file": "airplane_content_bird_style_005.png",
+          "content_index": 1278,
+          "style_index": 2
+        },
+        {
+          "file": "airplane_content_bird_style_006.png",
+          "content_index": 3964,
+          "style_index": 1836
+        },
+        {
+          "file": "airplane_content_bird_style_007.png",
+          "content_index": 1056,
+          "style_index": 1859
+        },
+        {
+          "file": "airplane_content_bird_style_008.png",
+          "content_index": 444,
+          "style_index": 912
+        },
+        {
+          "file": "airplane_content_bird_style_009.png",
+          "content_index": 3234,
+          "style_index": 3706
+        },
+        {
+          "file": "airplane_content_bird_style_010.png",
+          "content_index": 1576,
+          "style_index": 1420
+        },
+        {
+          "file": "airplane_content_bird_style_011.png",
+          "content_index": 825,
+          "style_index": 3556
+        },
+        {
+          "file": "airplane_content_bird_style_012.png",
+          "content_index": 4322,
+          "style_index": 277
+        },
+        {
+          "file": "airplane_content_bird_style_013.png",
+          "content_index": 4370,
+          "style_index": 457
+        },
+        {
+          "file": "airplane_content_bird_style_014.png",
+          "content_index": 203,
+          "style_index": 4012
+        },
+        {
+          "file": "airplane_content_bird_style_015.png",
+          "content_index": 3110,
+          "style_index": 1718
+        },
+        {
+          "file": "airplane_content_bird_style_016.png",
+          "content_index": 3907,
+          "style_index": 1219
+        },
+        {
+          "file": "airplane_content_bird_style_017.png",
+          "content_index": 3852,
+          "style_index": 4311
+        },
+        {
+          "file": "airplane_content_bird_style_018.png",
+          "content_index": 1089,
+          "style_index": 3375
+        }
+      ]
     },
     "bird_content_airplane_style": {
       "content_class": "bird",
       "style_class": "airplane",
       "candidates": 55,
       "accepted": 12,
-      "rejected": 43
+      "rejected": 43,
+      "items": [
+        {
+          "file": "bird_content_airplane_style_000.png",
+          "content_index": 2958,
+          "style_index": 2199
+        },
+        {
+          "file": "bird_content_airplane_style_001.png",
+          "content_index": 1300,
+          "style_index": 574
+        },
+        {
+          "file": "bird_content_airplane_style_002.png",
+          "content_index": 2701,
+          "style_index": 4186
+        },
+        {
+          "file": "bird_content_airplane_style_003.png",
+          "content_index": 3834,
+          "style_index": 4968
+        },
+        {
+          "file": "bird_content_airplane_style_004.png",
+          "content_index": 4361,
+          "style_index": 4346
+        },
+        {
+          "file": "bird_content_airplane_style_005.png",
+          "content_index": 1788,
+          "style_index": 4760
+        },
+        {
+          "file": "bird_content_airplane_style_006.png",
+          "content_index": 1459,
+          "style_index": 1307
+        },
+        {
+          "file": "bird_content_airplane_style_007.png",
+          "content_index": 457,
+          "style_index": 4389
+        },
+        {
+          "file": "bird_content_airplane_style_008.png",
+          "content_index": 3504,
+          "style_index": 478
+        },
+        {
+          "file": "bird_content_airplane_style_009.png",
+          "content_index": 40,
+          "style_index": 3125
+        },
+        {
+          "file": "bird_content_airplane_style_010.png",
+          "content_index": 208,
+          "style_index": 3110
+        },
+        {
+          "file": "bird_content_airplane_style_011.png",
+          "content_index": 0,
+          "style_index": 2610
+        }
+      ]
     },
     "car_content_cat_style": {
       "content_class": "car",
       "style_class": "cat",
       "candidates": 55,
       "accepted": 13,
-      "rejected": 42
+      "rejected": 42,
+      "items": [
+        {
+          "file": "car_content_cat_style_000.png",
+          "content_index": 906,
+          "style_index": 1374
+        },
+        {
+          "file": "car_content_cat_style_001.png",
+          "content_index": 3383,
+          "style_index": 1339
+        },
+        {
+          "file": "car_content_cat_style_002.png",
+          "content_index": 2048,
+          "style_index": 3043
+        },
+        {
+          "file": "car_content_cat_style_003.png",
+          "content_index": 286,
+          "style_index": 4099
+        },
+        {
+          "file": "car_content_cat_style_004.png",
+          "content_index": 3068,
+          "style_index": 3195
+        },
+        {
+          "file": "car_content_cat_style_005.png",
+          "content_index": 2645,
+          "style_index": 3776
+        },
+        {
+          "file": "car_content_cat_style_006.png",
+          "content_index": 4560,
+          "style_index": 597
+        },
+        {
+          "file": "car_content_cat_style_007.png",
+          "content_index": 2029,
+          "style_index": 4801
+        },
+        {
+          "file": "car_content_cat_style_008.png",
+          "content_index": 418,
+          "style_index": 4817
+        },
+        {
+          "file": "car_content_cat_style_009.png",
+          "content_index": 3829,
+          "style_index": 4841
+        },
+        {
+          "file": "car_content_cat_style_010.png",
+          "content_index": 84,
+          "style_index": 2348
+        },
+        {
+          "file": "car_content_cat_style_011.png",
+          "content_index": 74,
+          "style_index": 3956
+        },
+        {
+          "file": "car_content_cat_style_012.png",
+          "content_index": 4941,
+          "style_index": 4293
+        }
+      ]
     },
     "cat_content_car_style": {
       "content_class": "cat",
       "style_class": "car",
       "candidates": 55,
       "accepted": 29,
-      "rejected": 26
+      "rejected": 26,
+      "items": [
+        {
+          "file": "cat_content_car_style_000.png",
+          "content_index": 3626,
+          "style_index": 1519
+        },
+        {
+          "file": "cat_content_car_style_001.png",
+          "content_index": 1100,
+          "style_index": 3298
+        },
+        {
+          "file": "cat_content_car_style_002.png",
+          "content_index": 4873,
+          "style_index": 772
+        },
+        {
+          "file": "cat_content_car_style_003.png",
+          "content_index": 4349,
+          "style_index": 4040
+        },
+        {
+          "file": "cat_content_car_style_004.png",
+          "content_index": 4840,
+          "style_index": 3141
+        },
+        {
+          "file": "cat_content_car_style_005.png",
+          "content_index": 3416,
+          "style_index": 166
+        },
+        {
+          "file": "cat_content_car_style_006.png",
+          "content_index": 588,
+          "style_index": 3372
+        },
+        {
+          "file": "cat_content_car_style_007.png",
+          "content_index": 2494,
+          "style_index": 2288
+        },
+        {
+          "file": "cat_content_car_style_008.png",
+          "content_index": 1238,
+          "style_index": 3570
+        },
+        {
+          "file": "cat_content_car_style_009.png",
+          "content_index": 2344,
+          "style_index": 1534
+        },
+        {
+          "file": "cat_content_car_style_010.png",
+          "content_index": 3451,
+          "style_index": 332
+        },
+        {
+          "file": "cat_content_car_style_011.png",
+          "content_index": 1137,
+          "style_index": 4780
+        },
+        {
+          "file": "cat_content_car_style_012.png",
+          "content_index": 1775,
+          "style_index": 2397
+        },
+        {
+          "file": "cat_content_car_style_013.png",
+          "content_index": 2702,
+          "style_index": 1722
+        },
+        {
+          "file": "cat_content_car_style_014.png",
+          "content_index": 4577,
+          "style_index": 441
+        },
+        {
+          "file": "cat_content_car_style_015.png",
+          "content_index": 2904,
+          "style_index": 2001
+        },
+        {
+          "file": "cat_content_car_style_016.png",
+          "content_index": 2330,
+          "style_index": 197
+        },
+        {
+          "file": "cat_content_car_style_017.png",
+          "content_index": 3906,
+          "style_index": 3132
+        },
+        {
+          "file": "cat_content_car_style_018.png",
+          "content_index": 956,
+          "style_index": 3106
+        },
+        {
+          "file": "cat_content_car_style_019.png",
+          "content_index": 1328,
+          "style_index": 3068
+        },
+        {
+          "file": "cat_content_car_style_020.png",
+          "content_index": 126,
+          "style_index": 4763
+        },
+        {
+          "file": "cat_content_car_style_021.png",
+          "content_index": 4987,
+          "style_index": 2292
+        },
+        {
+          "file": "cat_content_car_style_022.png",
+          "content_index": 4656,
+          "style_index": 2220
+        },
+        {
+          "file": "cat_content_car_style_023.png",
+          "content_index": 349,
+          "style_index": 3495
+        },
+        {
+          "file": "cat_content_car_style_024.png",
+          "content_index": 1291,
+          "style_index": 2393
+        },
+        {
+          "file": "cat_content_car_style_025.png",
+          "content_index": 347,
+          "style_index": 1843
+        },
+        {
+          "file": "cat_content_car_style_026.png",
+          "content_index": 43,
+          "style_index": 2521
+        },
+        {
+          "file": "cat_content_car_style_027.png",
+          "content_index": 4021,
+          "style_index": 3510
+        },
+        {
+          "file": "cat_content_car_style_028.png",
+          "content_index": 3715,
+          "style_index": 3226
+        }
+      ]
     },
     "deer_content_dog_style": {
       "content_class": "deer",
       "style_class": "dog",
       "candidates": 55,
       "accepted": 18,
-      "rejected": 37
+      "rejected": 37,
+      "items": [
+        {
+          "file": "deer_content_dog_style_000.png",
+          "content_index": 2809,
+          "style_index": 2707
+        },
+        {
+          "file": "deer_content_dog_style_001.png",
+          "content_index": 3104,
+          "style_index": 2823
+        },
+        {
+          "file": "deer_content_dog_style_002.png",
+          "content_index": 499,
+          "style_index": 4714
+        },
+        {
+          "file": "deer_content_dog_style_003.png",
+          "content_index": 410,
+          "style_index": 2553
+        },
+        {
+          "file": "deer_content_dog_style_004.png",
+          "content_index": 2920,
+          "style_index": 2408
+        },
+        {
+          "file": "deer_content_dog_style_005.png",
+          "content_index": 4036,
+          "style_index": 2699
+        },
+        {
+          "file": "deer_content_dog_style_006.png",
+          "content_index": 4970,
+          "style_index": 1652
+        },
+        {
+          "file": "deer_content_dog_style_007.png",
+          "content_index": 4769,
+          "style_index": 2569
+        },
+        {
+          "file": "deer_content_dog_style_008.png",
+          "content_index": 492,
+          "style_index": 214
+        },
+        {
+          "file": "deer_content_dog_style_009.png",
+          "content_index": 4883,
+          "style_index": 2866
+        },
+        {
+          "file": "deer_content_dog_style_010.png",
+          "content_index": 4431,
+          "style_index": 4717
+        },
+        {
+          "file": "deer_content_dog_style_011.png",
+          "content_index": 2517,
+          "style_index": 3792
+        },
+        {
+          "file": "deer_content_dog_style_012.png",
+          "content_index": 2185,
+          "style_index": 3605
+        },
+        {
+          "file": "deer_content_dog_style_013.png",
+          "content_index": 3902,
+          "style_index": 4953
+        },
+        {
+          "file": "deer_content_dog_style_014.png",
+          "content_index": 2152,
+          "style_index": 580
+        },
+        {
+          "file": "deer_content_dog_style_015.png",
+          "content_index": 1606,
+          "style_index": 467
+        },
+        {
+          "file": "deer_content_dog_style_016.png",
+          "content_index": 4955,
+          "style_index": 1426
+        },
+        {
+          "file": "deer_content_dog_style_017.png",
+          "content_index": 1021,
+          "style_index": 4436
+        }
+      ]
     },
     "dog_content_deer_style": {
       "content_class": "dog",
       "style_class": "deer",
       "candidates": 55,
-      "accepted": 32,
-      "rejected": 23
+      "accepted": 33,
+      "rejected": 22,
+      "items": [
+        {
+          "file": "dog_content_deer_style_000.png",
+          "content_index": 8,
+          "style_index": 181
+        },
+        {
+          "file": "dog_content_deer_style_001.png",
+          "content_index": 3795,
+          "style_index": 4527
+        },
+        {
+          "file": "dog_content_deer_style_002.png",
+          "content_index": 2543,
+          "style_index": 2627
+        },
+        {
+          "file": "dog_content_deer_style_003.png",
+          "content_index": 986,
+          "style_index": 4722
+        },
+        {
+          "file": "dog_content_deer_style_004.png",
+          "content_index": 1392,
+          "style_index": 1479
+        },
+        {
+          "file": "dog_content_deer_style_005.png",
+          "content_index": 4893,
+          "style_index": 2808
+        },
+        {
+          "file": "dog_content_deer_style_006.png",
+          "content_index": 2990,
+          "style_index": 1645
+        },
+        {
+          "file": "dog_content_deer_style_007.png",
+          "content_index": 2957,
+          "style_index": 3021
+        },
+        {
+          "file": "dog_content_deer_style_008.png",
+          "content_index": 3744,
+          "style_index": 4149
+        },
+        {
+          "file": "dog_content_deer_style_009.png",
+          "content_index": 580,
+          "style_index": 2780
+        },
+        {
+          "file": "dog_content_deer_style_010.png",
+          "content_index": 3122,
+          "style_index": 3901
+        },
+        {
+          "file": "dog_content_deer_style_011.png",
+          "content_index": 526,
+          "style_index": 2505
+        },
+        {
+          "file": "dog_content_deer_style_012.png",
+          "content_index": 2705,
+          "style_index": 184
+        },
+        {
+          "file": "dog_content_deer_style_013.png",
+          "content_index": 409,
+          "style_index": 2948
+        },
+        {
+          "file": "dog_content_deer_style_014.png",
+          "content_index": 1094,
+          "style_index": 4333
+        },
+        {
+          "file": "dog_content_deer_style_015.png",
+          "content_index": 51,
+          "style_index": 3930
+        },
+        {
+          "file": "dog_content_deer_style_016.png",
+          "content_index": 3932,
+          "style_index": 2658
+        },
+        {
+          "file": "dog_content_deer_style_017.png",
+          "content_index": 4661,
+          "style_index": 1961
+        },
+        {
+          "file": "dog_content_deer_style_018.png",
+          "content_index": 635,
+          "style_index": 1021
+        },
+        {
+          "file": "dog_content_deer_style_019.png",
+          "content_index": 1574,
+          "style_index": 3137
+        },
+        {
+          "file": "dog_content_deer_style_020.png",
+          "content_index": 1103,
+          "style_index": 1405
+        },
+        {
+          "file": "dog_content_deer_style_021.png",
+          "content_index": 3370,
+          "style_index": 3213
+        },
+        {
+          "file": "dog_content_deer_style_022.png",
+          "content_index": 3784,
+          "style_index": 1700
+        },
+        {
+          "file": "dog_content_deer_style_023.png",
+          "content_index": 3245,
+          "style_index": 2115
+        },
+        {
+          "file": "dog_content_deer_style_024.png",
+          "content_index": 2278,
+          "style_index": 1755
+        },
+        {
+          "file": "dog_content_deer_style_025.png",
+          "content_index": 3828,
+          "style_index": 4578
+        },
+        {
+          "file": "dog_content_deer_style_026.png",
+          "content_index": 2941,
+          "style_index": 2169
+        },
+        {
+          "file": "dog_content_deer_style_027.png",
+          "content_index": 2666,
+          "style_index": 3955
+        },
+        {
+          "file": "dog_content_deer_style_028.png",
+          "content_index": 1015,
+          "style_index": 1372
+        },
+        {
+          "file": "dog_content_deer_style_029.png",
+          "content_index": 3885,
+          "style_index": 4241
+        },
+        {
+          "file": "dog_content_deer_style_030.png",
+          "content_index": 4907,
+          "style_index": 4694
+        },
+        {
+          "file": "dog_content_deer_style_031.png",
+          "content_index": 2986,
+          "style_index": 131
+        },
+        {
+          "file": "dog_content_deer_style_032.png",
+          "content_index": 3059,
+          "style_index": 4538
+        }
+      ]
     },
     "horse_content_monkey_style": {
       "content_class": "horse",
       "style_class": "monkey",
       "candidates": 55,
       "accepted": 30,
-      "rejected": 25
+      "rejected": 25,
+      "items": [
+        {
+          "file": "horse_content_monkey_style_000.png",
+          "content_index": 3910,
+          "style_index": 1834
+        },
+        {
+          "file": "horse_content_monkey_style_001.png",
+          "content_index": 1647,
+          "style_index": 3957
+        },
+        {
+          "file": "horse_content_monkey_style_002.png",
+          "content_index": 3355,
+          "style_index": 1783
+        },
+        {
+          "file": "horse_content_monkey_style_003.png",
+          "content_index": 2409,
+          "style_index": 702
+        },
+        {
+          "file": "horse_content_monkey_style_004.png",
+          "content_index": 4969,
+          "style_index": 1424
+        },
+        {
+          "file": "horse_content_monkey_style_005.png",
+          "content_index": 4975,
+          "style_index": 1337
+        },
+        {
+          "file": "horse_content_monkey_style_006.png",
+          "content_index": 1023,
+          "style_index": 3429
+        },
+        {
+          "file": "horse_content_monkey_style_007.png",
+          "content_index": 1442,
+          "style_index": 363
+        },
+        {
+          "file": "horse_content_monkey_style_008.png",
+          "content_index": 3033,
+          "style_index": 880
+        },
+        {
+          "file": "horse_content_monkey_style_009.png",
+          "content_index": 2181,
+          "style_index": 3239
+        },
+        {
+          "file": "horse_content_monkey_style_010.png",
+          "content_index": 3503,
+          "style_index": 101
+        },
+        {
+          "file": "horse_content_monkey_style_011.png",
+          "content_index": 2984,
+          "style_index": 2849
+        },
+        {
+          "file": "horse_content_monkey_style_012.png",
+          "content_index": 752,
+          "style_index": 869
+        },
+        {
+          "file": "horse_content_monkey_style_013.png",
+          "content_index": 1979,
+          "style_index": 1032
+        },
+        {
+          "file": "horse_content_monkey_style_014.png",
+          "content_index": 294,
+          "style_index": 338
+        },
+        {
+          "file": "horse_content_monkey_style_015.png",
+          "content_index": 4154,
+          "style_index": 1091
+        },
+        {
+          "file": "horse_content_monkey_style_016.png",
+          "content_index": 390,
+          "style_index": 1691
+        },
+        {
+          "file": "horse_content_monkey_style_017.png",
+          "content_index": 971,
+          "style_index": 3382
+        },
+        {
+          "file": "horse_content_monkey_style_018.png",
+          "content_index": 653,
+          "style_index": 593
+        },
+        {
+          "file": "horse_content_monkey_style_019.png",
+          "content_index": 2373,
+          "style_index": 4884
+        },
+        {
+          "file": "horse_content_monkey_style_020.png",
+          "content_index": 1902,
+          "style_index": 2318
+        },
+        {
+          "file": "horse_content_monkey_style_021.png",
+          "content_index": 4438,
+          "style_index": 1595
+        },
+        {
+          "file": "horse_content_monkey_style_022.png",
+          "content_index": 2488,
+          "style_index": 2744
+        },
+        {
+          "file": "horse_content_monkey_style_023.png",
+          "content_index": 2560,
+          "style_index": 1968
+        },
+        {
+          "file": "horse_content_monkey_style_024.png",
+          "content_index": 4487,
+          "style_index": 1914
+        },
+        {
+          "file": "horse_content_monkey_style_025.png",
+          "content_index": 743,
+          "style_index": 1860
+        },
+        {
+          "file": "horse_content_monkey_style_026.png",
+          "content_index": 4916,
+          "style_index": 1533
+        },
+        {
+          "file": "horse_content_monkey_style_027.png",
+          "content_index": 942,
+          "style_index": 2718
+        },
+        {
+          "file": "horse_content_monkey_style_028.png",
+          "content_index": 2290,
+          "style_index": 3302
+        },
+        {
+          "file": "horse_content_monkey_style_029.png",
+          "content_index": 4033,
+          "style_index": 4005
+        }
+      ]
     },
     "monkey_content_horse_style": {
       "content_class": "monkey",
       "style_class": "horse",
       "candidates": 55,
       "accepted": 22,
-      "rejected": 33
+      "rejected": 33,
+      "items": [
+        {
+          "file": "monkey_content_horse_style_000.png",
+          "content_index": 3425,
+          "style_index": 2294
+        },
+        {
+          "file": "monkey_content_horse_style_001.png",
+          "content_index": 2878,
+          "style_index": 2560
+        },
+        {
+          "file": "monkey_content_horse_style_002.png",
+          "content_index": 2977,
+          "style_index": 4300
+        },
+        {
+          "file": "monkey_content_horse_style_003.png",
+          "content_index": 2595,
+          "style_index": 2716
+        },
+        {
+          "file": "monkey_content_horse_style_004.png",
+          "content_index": 2410,
+          "style_index": 3407
+        },
+        {
+          "file": "monkey_content_horse_style_005.png",
+          "content_index": 756,
+          "style_index": 1778
+        },
+        {
+          "file": "monkey_content_horse_style_006.png",
+          "content_index": 3799,
+          "style_index": 2855
+        },
+        {
+          "file": "monkey_content_horse_style_007.png",
+          "content_index": 279,
+          "style_index": 2577
+        },
+        {
+          "file": "monkey_content_horse_style_008.png",
+          "content_index": 4998,
+          "style_index": 1051
+        },
+        {
+          "file": "monkey_content_horse_style_009.png",
+          "content_index": 2144,
+          "style_index": 4581
+        },
+        {
+          "file": "monkey_content_horse_style_010.png",
+          "content_index": 44,
+          "style_index": 438
+        },
+        {
+          "file": "monkey_content_horse_style_011.png",
+          "content_index": 3865,
+          "style_index": 2332
+        },
+        {
+          "file": "monkey_content_horse_style_012.png",
+          "content_index": 4548,
+          "style_index": 360
+        },
+        {
+          "file": "monkey_content_horse_style_013.png",
+          "content_index": 1463,
+          "style_index": 2821
+        },
+        {
+          "file": "monkey_content_horse_style_014.png",
+          "content_index": 1440,
+          "style_index": 92
+        },
+        {
+          "file": "monkey_content_horse_style_015.png",
+          "content_index": 4298,
+          "style_index": 4265
+        },
+        {
+          "file": "monkey_content_horse_style_016.png",
+          "content_index": 1141,
+          "style_index": 1692
+        },
+        {
+          "file": "monkey_content_horse_style_017.png",
+          "content_index": 989,
+          "style_index": 2003
+        },
+        {
+          "file": "monkey_content_horse_style_018.png",
+          "content_index": 1860,
+          "style_index": 2290
+        },
+        {
+          "file": "monkey_content_horse_style_019.png",
+          "content_index": 3622,
+          "style_index": 2733
+        },
+        {
+          "file": "monkey_content_horse_style_020.png",
+          "content_index": 1543,
+          "style_index": 1769
+        },
+        {
+          "file": "monkey_content_horse_style_021.png",
+          "content_index": 3342,
+          "style_index": 3076
+        }
+      ]
     },
     "ship_content_truck_style": {
       "content_class": "ship",
       "style_class": "truck",
       "candidates": 55,
       "accepted": 19,
-      "rejected": 36
+      "rejected": 36,
+      "items": [
+        {
+          "file": "ship_content_truck_style_000.png",
+          "content_index": 974,
+          "style_index": 2944
+        },
+        {
+          "file": "ship_content_truck_style_001.png",
+          "content_index": 4123,
+          "style_index": 1905
+        },
+        {
+          "file": "ship_content_truck_style_002.png",
+          "content_index": 2492,
+          "style_index": 3017
+        },
+        {
+          "file": "ship_content_truck_style_003.png",
+          "content_index": 370,
+          "style_index": 525
+        },
+        {
+          "file": "ship_content_truck_style_004.png",
+          "content_index": 2883,
+          "style_index": 2170
+        },
+        {
+          "file": "ship_content_truck_style_005.png",
+          "content_index": 882,
+          "style_index": 1035
+        },
+        {
+          "file": "ship_content_truck_style_006.png",
+          "content_index": 3755,
+          "style_index": 3969
+        },
+        {
+          "file": "ship_content_truck_style_007.png",
+          "content_index": 2857,
+          "style_index": 3207
+        },
+        {
+          "file": "ship_content_truck_style_008.png",
+          "content_index": 909,
+          "style_index": 4746
+        },
+        {
+          "file": "ship_content_truck_style_009.png",
+          "content_index": 78,
+          "style_index": 809
+        },
+        {
+          "file": "ship_content_truck_style_010.png",
+          "content_index": 511,
+          "style_index": 3898
+        },
+        {
+          "file": "ship_content_truck_style_011.png",
+          "content_index": 4065,
+          "style_index": 1428
+        },
+        {
+          "file": "ship_content_truck_style_012.png",
+          "content_index": 4864,
+          "style_index": 931
+        },
+        {
+          "file": "ship_content_truck_style_013.png",
+          "content_index": 355,
+          "style_index": 4799
+        },
+        {
+          "file": "ship_content_truck_style_014.png",
+          "content_index": 3940,
+          "style_index": 3064
+        },
+        {
+          "file": "ship_content_truck_style_015.png",
+          "content_index": 2489,
+          "style_index": 662
+        },
+        {
+          "file": "ship_content_truck_style_016.png",
+          "content_index": 2446,
+          "style_index": 2800
+        },
+        {
+          "file": "ship_content_truck_style_017.png",
+          "content_index": 3513,
+          "style_index": 5
+        },
+        {
+          "file": "ship_content_truck_style_018.png",
+          "content_index": 3647,
+          "style_index": 4058
+        }
+      ]
     },
     "truck_content_ship_style": {
       "content_class": "truck",
       "style_class": "ship",
       "candidates": 55,
-      "accepted": 20,
-      "rejected": 35
+      "accepted": 21,
+      "rejected": 34,
+      "items": [
+        {
+          "file": "truck_content_ship_style_000.png",
+          "content_index": 1681,
+          "style_index": 1795
+        },
+        {
+          "file": "truck_content_ship_style_001.png",
+          "content_index": 361,
+          "style_index": 1431
+        },
+        {
+          "file": "truck_content_ship_style_002.png",
+          "content_index": 403,
+          "style_index": 2580
+        },
+        {
+          "file": "truck_content_ship_style_003.png",
+          "content_index": 4855,
+          "style_index": 4980
+        },
+        {
+          "file": "truck_content_ship_style_004.png",
+          "content_index": 1013,
+          "style_index": 3778
+        },
+        {
+          "file": "truck_content_ship_style_005.png",
+          "content_index": 3574,
+          "style_index": 587
+        },
+        {
+          "file": "truck_content_ship_style_006.png",
+          "content_index": 4746,
+          "style_index": 4366
+        },
+        {
+          "file": "truck_content_ship_style_007.png",
+          "content_index": 1582,
+          "style_index": 4880
+        },
+        {
+          "file": "truck_content_ship_style_008.png",
+          "content_index": 1480,
+          "style_index": 1496
+        },
+        {
+          "file": "truck_content_ship_style_009.png",
+          "content_index": 575,
+          "style_index": 2836
+        },
+        {
+          "file": "truck_content_ship_style_010.png",
+          "content_index": 2467,
+          "style_index": 2620
+        },
+        {
+          "file": "truck_content_ship_style_011.png",
+          "content_index": 613,
+          "style_index": 1333
+        },
+        {
+          "file": "truck_content_ship_style_012.png",
+          "content_index": 2636,
+          "style_index": 4193
+        },
+        {
+          "file": "truck_content_ship_style_013.png",
+          "content_index": 854,
+          "style_index": 4973
+        },
+        {
+          "file": "truck_content_ship_style_014.png",
+          "content_index": 488,
+          "style_index": 2489
+        },
+        {
+          "file": "truck_content_ship_style_015.png",
+          "content_index": 4091,
+          "style_index": 2175
+        },
+        {
+          "file": "truck_content_ship_style_016.png",
+          "content_index": 1987,
+          "style_index": 2796
+        },
+        {
+          "file": "truck_content_ship_style_017.png",
+          "content_index": 647,
+          "style_index": 751
+        },
+        {
+          "file": "truck_content_ship_style_018.png",
+          "content_index": 644,
+          "style_index": 1522
+        },
+        {
+          "file": "truck_content_ship_style_019.png",
+          "content_index": 1260,
+          "style_index": 4181
+        },
+        {
+          "file": "truck_content_ship_style_020.png",
+          "content_index": 3817,
+          "style_index": 3070
+        }
+      ]
     },
     "bird_content_monkey_style": {
       "content_class": "bird",
       "style_class": "monkey",
       "candidates": 55,
       "accepted": 21,
-      "rejected": 34
+      "rejected": 34,
+      "items": [
+        {
+          "file": "bird_content_monkey_style_000.png",
+          "content_index": 3797,
+          "style_index": 841
+        },
+        {
+          "file": "bird_content_monkey_style_001.png",
+          "content_index": 2962,
+          "style_index": 3722
+        },
+        {
+          "file": "bird_content_monkey_style_002.png",
+          "content_index": 2544,
+          "style_index": 3891
+        },
+        {
+          "file": "bird_content_monkey_style_003.png",
+          "content_index": 3016,
+          "style_index": 3265
+        },
+        {
+          "file": "bird_content_monkey_style_004.png",
+          "content_index": 2148,
+          "style_index": 338
+        },
+        {
+          "file": "bird_content_monkey_style_005.png",
+          "content_index": 1300,
+          "style_index": 763
+        },
+        {
+          "file": "bird_content_monkey_style_006.png",
+          "content_index": 4713,
+          "style_index": 3540
+        },
+        {
+          "file": "bird_content_monkey_style_007.png",
+          "content_index": 3928,
+          "style_index": 3028
+        },
+        {
+          "file": "bird_content_monkey_style_008.png",
+          "content_index": 2736,
+          "style_index": 4474
+        },
+        {
+          "file": "bird_content_monkey_style_009.png",
+          "content_index": 480,
+          "style_index": 2917
+        },
+        {
+          "file": "bird_content_monkey_style_010.png",
+          "content_index": 4391,
+          "style_index": 1529
+        },
+        {
+          "file": "bird_content_monkey_style_011.png",
+          "content_index": 1758,
+          "style_index": 3600
+        },
+        {
+          "file": "bird_content_monkey_style_012.png",
+          "content_index": 3194,
+          "style_index": 550
+        },
+        {
+          "file": "bird_content_monkey_style_013.png",
+          "content_index": 489,
+          "style_index": 3443
+        },
+        {
+          "file": "bird_content_monkey_style_014.png",
+          "content_index": 1853,
+          "style_index": 1829
+        },
+        {
+          "file": "bird_content_monkey_style_015.png",
+          "content_index": 2013,
+          "style_index": 4674
+        },
+        {
+          "file": "bird_content_monkey_style_016.png",
+          "content_index": 4479,
+          "style_index": 3423
+        },
+        {
+          "file": "bird_content_monkey_style_017.png",
+          "content_index": 4586,
+          "style_index": 1337
+        },
+        {
+          "file": "bird_content_monkey_style_018.png",
+          "content_index": 310,
+          "style_index": 4440
+        },
+        {
+          "file": "bird_content_monkey_style_019.png",
+          "content_index": 2946,
+          "style_index": 2255
+        },
+        {
+          "file": "bird_content_monkey_style_020.png",
+          "content_index": 38,
+          "style_index": 3756
+        }
+      ]
     },
     "monkey_content_bird_style": {
       "content_class": "monkey",
       "style_class": "bird",
       "candidates": 55,
       "accepted": 28,
-      "rejected": 27
+      "rejected": 27,
+      "items": [
+        {
+          "file": "monkey_content_bird_style_000.png",
+          "content_index": 162,
+          "style_index": 554
+        },
+        {
+          "file": "monkey_content_bird_style_001.png",
+          "content_index": 2899,
+          "style_index": 2818
+        },
+        {
+          "file": "monkey_content_bird_style_002.png",
+          "content_index": 4662,
+          "style_index": 1004
+        },
+        {
+          "file": "monkey_content_bird_style_003.png",
+          "content_index": 4673,
+          "style_index": 628
+        },
+        {
+          "file": "monkey_content_bird_style_004.png",
+          "content_index": 3491,
+          "style_index": 856
+        },
+        {
+          "file": "monkey_content_bird_style_005.png",
+          "content_index": 77,
+          "style_index": 432
+        },
+        {
+          "file": "monkey_content_bird_style_006.png",
+          "content_index": 3273,
+          "style_index": 838
+        },
+        {
+          "file": "monkey_content_bird_style_007.png",
+          "content_index": 756,
+          "style_index": 64
+        },
+        {
+          "file": "monkey_content_bird_style_008.png",
+          "content_index": 1733,
+          "style_index": 3758
+        },
+        {
+          "file": "monkey_content_bird_style_009.png",
+          "content_index": 1597,
+          "style_index": 656
+        },
+        {
+          "file": "monkey_content_bird_style_010.png",
+          "content_index": 3425,
+          "style_index": 3834
+        },
+        {
+          "file": "monkey_content_bird_style_011.png",
+          "content_index": 1075,
+          "style_index": 3561
+        },
+        {
+          "file": "monkey_content_bird_style_012.png",
+          "content_index": 3994,
+          "style_index": 4979
+        },
+        {
+          "file": "monkey_content_bird_style_013.png",
+          "content_index": 1388,
+          "style_index": 1878
+        },
+        {
+          "file": "monkey_content_bird_style_014.png",
+          "content_index": 3905,
+          "style_index": 3271
+        },
+        {
+          "file": "monkey_content_bird_style_015.png",
+          "content_index": 3658,
+          "style_index": 3632
+        },
+        {
+          "file": "monkey_content_bird_style_016.png",
+          "content_index": 2747,
+          "style_index": 696
+        },
+        {
+          "file": "monkey_content_bird_style_017.png",
+          "content_index": 1973,
+          "style_index": 3625
+        },
+        {
+          "file": "monkey_content_bird_style_018.png",
+          "content_index": 3604,
+          "style_index": 3933
+        },
+        {
+          "file": "monkey_content_bird_style_019.png",
+          "content_index": 2497,
+          "style_index": 3171
+        },
+        {
+          "file": "monkey_content_bird_style_020.png",
+          "content_index": 2573,
+          "style_index": 2402
+        },
+        {
+          "file": "monkey_content_bird_style_021.png",
+          "content_index": 3622,
+          "style_index": 1542
+        },
+        {
+          "file": "monkey_content_bird_style_022.png",
+          "content_index": 3844,
+          "style_index": 4563
+        },
+        {
+          "file": "monkey_content_bird_style_023.png",
+          "content_index": 4808,
+          "style_index": 3517
+        },
+        {
+          "file": "monkey_content_bird_style_024.png",
+          "content_index": 3302,
+          "style_index": 1561
+        },
+        {
+          "file": "monkey_content_bird_style_025.png",
+          "content_index": 2168,
+          "style_index": 2480
+        },
+        {
+          "file": "monkey_content_bird_style_026.png",
+          "content_index": 4005,
+          "style_index": 4612
+        },
+        {
+          "file": "monkey_content_bird_style_027.png",
+          "content_index": 2744,
+          "style_index": 4450
+        }
+      ]
     }
   },
   "threshold": 0.35,
   "seed": 6304,
-  "total_accepted": 263,
-  "total_rejected": 397,
+  "total_accepted": 265,
+  "total_rejected": 395,
   "rejection_rule": "structure correlation >= 0.35 AND LAB statistics closer to style than content"
 }

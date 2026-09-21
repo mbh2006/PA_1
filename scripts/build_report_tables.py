@@ -154,10 +154,13 @@ def task1_conflicts() -> List[Dict]:
     analysis = load_json(RESULTS / "task1" / "analysis.json")
     if not analysis:
         return []
+    stability = analysis.get("stability", {}).get("conflict", {})
     rows = []
     for backbone, predictors in analysis.get("conflicts", {}).items():
         for predictor, values in predictors.items():
             rows.append({"backbone": backbone, "predictor": predictor,
+                         "cosine_stability": stability.get(backbone, {}).get(
+                             "cosine_clean_vs_transformed"),
                          **{k: values.get(k) for k in ("shape", "texture", "other", "total",
                                                        "shape_bias", "coverage")}})
     return rows
