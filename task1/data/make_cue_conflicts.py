@@ -122,6 +122,7 @@ def main(argv=None) -> None:
             content_positions = rng.permutation(len(content_pool))[:n]
             style_positions = rng.permutation(len(style_pool))[:n]
             accepted = rejected = 0
+            items = []
             for i in range(n):
                 content_image, _, content_original_index = train_dataset[int(content_pool[content_positions[i]])]
                 style_image, _, style_original_index = train_dataset[int(style_pool[style_positions[i]])]
@@ -131,6 +132,14 @@ def main(argv=None) -> None:
                 if correlation >= STRUCTURE_THRESHOLD and style_shifted(content_image, style_image, stylised):
                     filename = f"{key}_{accepted:03d}.png"
                     stylised.save(out_dir / filename)
+                    # record the source image indices so the analysis can pair each
+                    # accepted conflict with its clean content image (representation
+                    # stability) without any new forward passes
+                    items.append({
+                        "file": filename,
+                        "content_index": int(content_original_index),
+                        "style_index": int(style_original_index),
+                    })
                     accepted += 1
                 else:
                     rejected += 1
@@ -140,6 +149,7 @@ def main(argv=None) -> None:
                 "candidates": n,
                 "accepted": accepted,
                 "rejected": rejected,
+                "items": items,
             }
             total_accepted += accepted
             total_rejected += rejected

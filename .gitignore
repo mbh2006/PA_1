@@ -25,6 +25,10 @@ kaggle_outputs/
 ATML-PA1.pdf
 PA 0.pdf
 
+# --- study notes: kept locally, not part of the submission ---
+GUIDE.md
+GUIDE_Instruction.md
+
 # --- python / notebooks ---
 __pycache__/
 *.py[cod]

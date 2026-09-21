@@ -253,6 +253,41 @@ def _head_logits(cfg, name, features, device):
         return (torch.from_numpy(features).to(device) @ weight.t() + bias).cpu().numpy()
 
 
+def _conflict_stability(cache_dir, name, conflict_data, manifest_path):
+    """Cosine stability between every accepted conflict and its content image.
+
+    The conflict generator records the original index of the content image that
+    produced each accepted conflict, and the cached clean train features cover
+    every train-subset image, so the clean counterpart needs no new forward
+    passes. Returns None when the pairing information is unavailable.
+    """
+    train_path = Path(cache_dir) / f"{name}_train.npz"
+    if not train_path.exists() or not Path(manifest_path).exists():
+        return None
+    with open(manifest_path, "r", encoding="utf-8") as fh:
+        manifest = json.load(fh)
+    content_index_of = {}
+    for key, info in manifest.get("pairs", {}).items():
+        for item in (info.get("items") or []):
+            if "file" in item and "content_index" in item:
+                content_index_of[item["file"]] = int(item["content_index"])
+    if not content_index_of:
+        return None
+    train = np.load(train_path)
+    row_of = {int(index): row for row, index in enumerate(train["indices"])}
+    clean_rows, conflict_rows = [], []
+    files = [str(value) for value in conflict_data["files"]]
+    for position, filename in enumerate(files):
+        content_index = content_index_of.get(filename)
+        if content_index is None or content_index not in row_of:
+            continue
+        clean_rows.append(train["features"][row_of[content_index]])
+        conflict_rows.append(conflict_data["features"][position])
+    if not clean_rows:
+        return None
+    return cosine_stability(np.stack(clean_rows), np.stack(conflict_rows))
+
+
 def stage_analysis(cfg, args, subsets) -> None:
     device = resolve_device(args.device)
     cache_dir = Path(cfg["cache_dir"])
@@ -352,6 +387,13 @@ def stage_analysis(cfg, args, subsets) -> None:
             counts = shape_texture_counts(head_predictions, content, style)
             report["conflicts"].setdefault(name, {})["head"] = {
                 **counts, **shape_bias_coverage(counts)}
+            # representation stability of cue conflicts: each accepted conflict
+            # is paired with the clean content image it was generated from
+            stability = _conflict_stability(cache_dir, name, data,
+                                            Path(cfg["conflicts_dir"]) / "manifest.json")
+            if stability is not None:
+                report["stability"].setdefault("conflict", {})[name] = {
+                    "cosine_clean_vs_transformed": stability}
             if clip_data is not None and name == "clip_vit_b32":
                 zero = (float(clip_data["scale"]) * (features @ clip_data["text_features"].T)).argmax(axis=1)
                 counts_zero = shape_texture_counts(zero, content, style)
