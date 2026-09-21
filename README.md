@@ -1,32 +1,87 @@
 # PA-1: Beyond IID - Representation, Invariance and Rejection
 
-Code for EE-5102/CS-6304 Programming Assignment 1 (Fall 2026).
-Four tasks study what a robust representation should preserve, become
-invariant to, and reject:
+Code and results for **EE-5102/CS-6304 Programming Assignment 1 (Fall 2026)**.
+All four tasks are complete and every reported number traces back to a saved
+result file under `results/`.
 
-| Task | Topic | Status |
-|------|--------------------------------------------|--------|
-| 1 | Inductive biases: shape / texture / colour / spatial structure (STL-10; ResNet-50, ViT-B/16, CLIP) | implemented, running |
-| 2 | Unsupervised domain adaptation on PACS (Target = Sketch): Source-only, DAN, DANN, CDAN | implemented, results in `results/t2_*` |
-| 3 | Domain generalisation on PACS (Sketch unseen): ERM (reused from T2), DAN-DG, SAM | implemented, results in `results/t3_*` |
-| 4 | Open-set recognition (CIFAR-10 known vs CIFAR-100 unknowns): MSP/MLS/Energy/Mahalanobis, GCSC, PROSER | implemented, running |
+| Task | Question | Status |
+|------|----------|--------|
+| 1 | Inductive biases on STL-10: shape / texture / colour / spatial structure (ResNet-50, ViT-B/16, CLIP) | complete |
+| 2 | Unsupervised domain adaptation on PACS -> Sketch: Source-only, DAN, DANN, CDAN | complete |
+| 3 | Domain generalisation with Sketch unseen: ERM (reused from T2), DAN-DG, SAM | complete |
+| 4 | Open-set recognition: CIFAR-10 known vs CIFAR-100 unknowns; MSP/MLS/Energy/Mahalanobis, Vanilla/GCSC/PROSER | complete |
 
-Report-side pointers: `results/report_tables/summary.md` (auto-assembled tables),
-`docs/evidence_map.md` (required evidence -> artefact), `docs/methods_notes.md`
-(method and design-decision notes, including the frozen-BatchNorm stability
-findings that required L2-normalising the features entering every alignment
-objective).
+Report-side entry points: `results/report_tables/summary.md` (all required
+tables, auto-assembled), `docs/evidence_map.md` (requirement -> artefact),
+`docs/methods_notes.md` (method and design-decision notes, including the
+frozen-BatchNorm stability findings).
+
+## Results at a glance
+
+**Task 1 - accuracy on the 500-image balanced test subset and cue-conflict summary**
+(263 accepted conflicts, 397 rejected by the model-free rule).
+
+| Model | Clean | Grayscale | Hue rot. | Patch shuffle | Shape bias | Coverage |
+|---|---|---|---|---|---|---|
+| ResNet-50 (V2) | 0.982 | 0.968 | 0.940 | 0.900 | 88.1% | 86.3% |
+| ViT-B/16 | 0.984 | 0.960 | 0.968 | 0.912 | 96.8% | 93.9% |
+| CLIP linear head | 0.976 | 0.954 | 0.956 | 0.798 | 94.9% | 90.1% |
+| CLIP zero-shot | 0.948 | 0.928 | 0.930 | 0.782 | 92.3% | 89.4% |
+
+**Task 2 - PACS -> Sketch**
+
+| Method | Source mean macro-F1 | Sketch accuracy | Sketch macro-F1 | Domain separability |
+|---|---|---|---|---|
+| Source-only | 0.9375 | 0.6747 | 0.6578 | 0.9986 |
+| DAN | 0.9320 | 0.7753 | 0.7382 | 0.8948 |
+| DANN | 0.9357 | 0.6320 | 0.6431 | 1.0000 |
+| CDAN | 0.9268 | 0.3156 | 0.4316 | 0.9959 |
+| DAN lambda=0.1 (study) | 0.9231 | 0.7376 | 0.7533 | 0.9918 |
+| DAN lambda=10 (study) | 0.0639 | collapsed | - | 0.8702 |
+
+**Task 3 - PACS with Sketch unseen**
+
+| Method | Mean source macro-F1 | Worst source macro-F1 | Sketch accuracy | Sketch macro-F1 | Source separability | Sharpness delta |
+|---|---|---|---|---|---|---|
+| ERM (T2 checkpoint) | 0.9375 | - | 0.6747 | 0.6578 | 0.8618 | 0.273 |
+| DAN-DG | 0.9123 | 0.8926 | 0.7137 | 0.7048 | 0.6776 | 134.2 |
+| SAM (rho=0.05) | 0.9583 | 0.9372 | 0.7137 | 0.7301 | 0.8553 | 0.166 |
+| SAM rho=0.01 (study) | 0.9458 | 0.9305 | 0.6747 | 0.7098 | 0.852 | 0.216 |
+| SAM rho=0.1 (study) | 0.9389 | 0.9173 | 0.7035 | 0.7111 | 0.816 | 0.118 |
+
+**Task 4 - open-set recognition** (threshold = 95th percentile of unknownness on
+CIFAR-10 validation; unknown rejection at that operating point)
+
+| Model | Score | Closed-set acc. | AUROC near | AUROC far | Near rejection | Far rejection |
+|---|---|---|---|---|---|---|
+| Vanilla | MLS | 0.9446 | 0.787 | 0.884 | 0.300 | 0.531 |
+| GCSC | MLS | 0.9503 | 0.818 | 0.912 | 0.356 | 0.578 |
+| PROSER | MLS | 0.9408 | 0.764 | 0.854 | 0.260 | 0.466 |
+| PROSER | Placeholder | 0.9408 | 0.754 | 0.872 | 0.263 | 0.500 |
+
+Post-hoc scores on the frozen vanilla model: MSP is strongest for near unknowns
+(AUROC 0.809), Mahalanobis for far unknowns (AUROC 0.916).
 
 ## Repository layout
 
 ```
-common/          seeding, configs, logging, metrics, plotting
+common/          seeding (6304), config inheritance + hash, run logging, metrics, plots
 shared/          PACS dataset + frozen protocol, ResNet-18 backbone, MMD, GRL,
-                 domain discriminator, frozen-BatchNorm policy
-  splits/        committed split file (seed 6304) reused by Tasks 2 and 3
-task2/           adaptation methods, single training pipeline, final evaluation
-scripts/         fake-PACS generator + end-to-end CPU smoke test
-docs/            short implementation / study notes
+                 domain discriminator, frozen-BatchNorm policy, PACS/CIFAR prep
+task1/           STL-10 subsets, interventions (grayscale/hue/translation/shuffle),
+                 AdaIN cue conflicts, ResNet-50/ViT-B16/CLIP backbones, analysis
+task2/           Task 2 methods (source_only/dan/dann/cdan) + one training pipeline
+                 + final evaluation + domain separability
+task3/           Task 3 methods (erm/dan_dg/sam) + Sketch evaluation + source-domain
+                 separability + sharpness proxy
+task4/           CIFAR ResNet-18, Vanilla/GCSC/PROSER, novelty scores, output cache,
+                 OSR evaluation and failure analysis
+kaggle/          generated Kaggle script kernels for every reported run + generator
+scripts/         smoke tests, fake-data generators, Kaggle push/queue/autopull,
+                 report-table builder
+docs/            methods notes and the evidence map
+results/         every run's config/history/metrics + analysis artefacts
+report/figures/  example cue-conflict images used in the report
 ```
 
 ## Setup
@@ -37,193 +92,99 @@ conda activate atml-pa1
 pip install -r requirements.txt
 ```
 
-## Data: PACS
-
-PACS has 7 classes in 4 domains (photo, art_painting, cartoon, sketch). Either
+On Kaggle almost everything is preinstalled; the only extras needed are
 
 ```bash
-# option A: download from the HuggingFace hub (needs internet + `datasets`)
-python -m shared.prepare_pacs --from-hf --out data/pacs
+pip install -q pyyaml scikit-learn tqdm
+# Task 1 only, and NOT with dependencies (validated recipe):
+pip install -q --no-deps open_clip_torch
+pip install -q --no-deps ftfy regex timm safetensors huggingface_hub
 ```
 
-or unpack a manual download so the four domain folders sit together and run
+## Data
+
+* **PACS** (Tasks 2-3): `python -m shared.prepare_pacs --from-hf --out data/pacs`
+  or unzip a manual download and run `--verify-only`. Then freeze the split once:
+  `python -m shared.build_splits --data-root data/pacs --out shared/splits/pacs_sketch_seed6304.json`
+  (committed, reused by both tasks).
+* **CIFAR-10 / CIFAR-100** (Task 4): torchvision downloads them into `data/`;
+  the CIFAR-10 split is committed at `task4/data/splits/cifar10_seed6304.json`,
+  and the near/far CIFAR-100 groups are fixed in `task4/data/cifar100_unknowns.py`.
+* **STL-10** (Task 1): torchvision loads the official binary files; the frozen
+  subsets (80/20 split + balanced 500 test IDs) are committed at
+  `task1/data/subsets_stl10_seed6304.json`.
+
+## Reproducing each task
 
 ```bash
-python -m shared.prepare_pacs --verify-only --out <folder>
-```
+# Task 1 - all stages (prepare, conflicts, cache, heads, analysis)
+python -m task1.run_task1 --config task1/configs/base.yaml --stage all
 
-Then create the frozen split file **once** and commit it:
-
-```bash
-python -m shared.build_splits --data-root data/pacs \
-    --out shared/splits/pacs_sketch_seed6304.json
-```
-
-Tasks 2 and 3 must load this file (`--splits`), never regenerate it, so every
-method sees exactly the same source train/val images.
-
-## Task 2 - domain adaptation to Sketch
-
-Four methods share one training pipeline; only the method-specific loss changes:
-
-```bash
+# Task 2
 python -m task2.train --config task2/configs/source_only.yaml
 python -m task2.train --config task2/configs/dan.yaml
 python -m task2.train --config task2/configs/dann.yaml
 python -m task2.train --config task2/configs/cdan.yaml
-```
+python -m task2.evaluate_final --run-dir results/t2_dan --baseline-run results/t2_source_only
+python -m task2.evaluation.domain_separability --run-dir results/t2_dan
 
-Fixed across methods (see `task2/configs/base.yaml`): ResNet-18
-`IMAGENET1K_V1` fully fine-tuned, AdamW 1e-4 / wd 1e-4, batch = 8 per source
-domain (+24 target), <=30 epochs, early stop after 5 epochs without improvement
-in mean source-validation macro-F1, seed 6304, BatchNorm running statistics
-frozen at pretrained values.
-
-Final evaluation (reads Sketch labels, so run only after all settings are
-frozen):
-
-```bash
-python -m task2.evaluate_final --run-dir results/task2_dan_seed6304_... \
-    --baseline-run results/task2_source_only_seed6304_...
-python -m task2.evaluation.domain_separability --run-dir results/task2_dan_seed6304_...
-```
-
-Each run writes to `results/<run_id>/`:
-
-```
-config.json              merged config + hash
-history.csv              one row per epoch (losses, per-domain val acc/F1)
-metrics.json             best epoch, best mean source macro-F1
-curves_train.png         loss curves (required evidence)
-curves_val.png           source-validation curves
-final_metrics.json       source-val + target metrics, per-class, confusions
-target_outputs.npz       raw target logits/paths for failure analysis
-domain_separability.json held-out accuracy of a source-vs-target probe
-```
-
-Checkpoints live in `checkpoints/<run_id>/{best,last}.pt` and are git-ignored.
-`last.pt` supports `--resume` when a Kaggle session hits its time limit.
-
-## Kaggle workflow (GPU)
-
-1. Upload PACS once as a private dataset (or run `prepare_pacs --from-hf` in a
-   notebook with internet enabled) and mount it at `/kaggle/input/...`.
-2. In each notebook: `git clone <repo>`, `cd` into it, then install only the
-   extras Kaggle does not already ship:
-
-```bash
-pip install PyYAML scikit-learn tqdm datasets
-```
-
-   (torch, torchvision, numpy, pandas and matplotlib are preinstalled; keep
-   internet ON the first time so the `IMAGENET1K_V1` weights can download.)
-3. Run **one method per notebook commit** so a failure costs one run, not all.
-   Example:
-
-```bash
-python -m shared.build_splits --data-root /kaggle/input/pacs --out shared/splits/pacs_sketch_seed6304.json
-python -m task2.train --config task2/configs/source_only.yaml --data-root /kaggle/input/pacs
-```
-
-4. Download `results/` into the repo, and publish `checkpoints/<erm_run_id>` as
-   a private dataset so Task 3 can reuse the ERM baseline unchanged.
-5. `--resume --run-id <same run id>` continues an interrupted run.
-
-## Local smoke test (no GPU, no real data)
-
-```bash
-python scripts/run_smoke_test.py
-```
-
-This creates a fake PACS tree, builds splits, then checks:
-
-* batch composition is exactly 8/8/8 source + 24 target;
-* BatchNorm running statistics never change while gamma/beta still get gradients;
-* all four methods train, checkpoint, evaluate and write their result files;
-* `evaluate_final` and `domain_separability` run on a finished checkpoint.
-
-## Task 3 - domain generalisation with Sketch unseen
-
-Task 3 shares the Task 2 protocol (same split file, same backbone, optimiser,
-batch composition, epochs, early stopping, seed and frozen-BN policy) but
-**never loads Sketch**: training, model selection and diagnostics are source-only.
-
-```bash
-python -m task3.train --config task3/configs/dan_dg.yaml   # pairwise source-domain MMD
-python -m task3.train --config task3/configs/sam.yaml      # SAM, rho = 0.05
-python -m task3.train --config task3/configs/sam.yaml --rho 0.01   # controlled study
-```
-
-The ERM baseline is the Task 2 source-only checkpoint, loaded unchanged.
-
-Final evaluation and diagnostics:
-
-```bash
+# Task 3 (ERM baseline = the Task 2 source-only checkpoint, reused unchanged)
+python -m task3.train --config task3/configs/dan_dg.yaml
+python -m task3.train --config task3/configs/sam.yaml
 python -m task3.evaluate_sketch --model-run results/t3_sam --erm-run results/t2_source_only
 python -m task3.evaluation.source_domain_separability --model-run results/t3_sam
 python -m task3.evaluation.sharpness --model-run results/t3_sam
-```
 
-`sharpness.json` reports `Delta = L_val(theta + eps) - L_val(theta)` with
-`eps = 0.05 * grad / ||grad||` on a fixed 32-per-domain batch (seed 6304);
-`source_domain_separability.json` reports three-way held-out accuracy of a
-logistic probe on the source validation features (chance 33.3%).
-
-## Task 4 - open-set recognition (CIFAR-10 vs CIFAR-100)
-
-```bash
+# Task 4
 python -m task4.train --config task4/configs/vanilla.yaml
 python -m task4.train --config task4/configs/gcsc.yaml
 python -m task4.train --config task4/configs/proser.yaml --init-ckpt checkpoints/t4_vanilla/best.pt
-python -m task4.extract_outputs --run-dir results/t4_vanilla    # + gcsc, proser
+python -m task4.extract_outputs --run-dir results/t4_vanilla     # + gcsc, proser
 python -m task4.evaluate_osr --vanilla-run results/t4_vanilla \
     --gcsc-run results/t4_gcsc --proser-run results/t4_proser
+
+# assemble the report tables from the saved result files
+python scripts/build_report_tables.py
 ```
 
-Scores: MSP / MLS / Energy on the known logits, diagonal-covariance
-Mahalanobis from unaugmented training features, and the PROSER placeholder
-margin calibrated on validation. Thresholds are the 95th percentile of
-unknownness on CIFAR-10 validation; CIFAR-100 images are used for evaluation
-only, never for training, checkpoint selection, score design or thresholds.
+## Kaggle execution (how the reported runs were produced)
 
-## Task 1 - inductive biases (STL-10)
-
-```bash
-python -m task1.run_task1 --config task1/configs/base.yaml --stage all
-```
-
-Stages: `prepare` (80/20 split + balanced 500-image test subset, seed 6304),
-`conflicts` (AdaIN style transfer with a model-free rejection rule),
-`cache` (frozen features for clean / grayscale / hue / patch-shuffle /
-translations / conflicts), `heads` (linear probes per backbone), `analysis`
-(accuracy, macro-F1, mean confidence, prediction consistency, shape bias and
-coverage, representation stability, translation curve, t-SNE figures).
-
-## Kaggle kernels (API-driven)
-
-`kaggle/kernels/` holds generated script kernels for every run (main
-comparisons, the two controlled studies, and the Task 3 ERM diagnostics).
-Regenerate and drive them with:
+`kaggle/make_kernels.py` generates one script kernel per run; they clone this
+repository, stage the datasets and execute the same pipeline as above.
 
 ```powershell
-python kaggle/make_kernels.py
-python scripts/kaggle_push.py push  t3_sam     # push (starts a headless GPU commit)
-python scripts/kaggle_push.py watch t3_sam
-python scripts/kaggle_push.py pull  t3_sam     # downloads the output into kaggle_outputs/
+python kaggle/make_kernels.py                       # regenerate kernel folders
+python scripts/kaggle_push.py push  t2_source_only  # start a headless GPU run
+python scripts/kaggle_push.py watch t2_source_only
+python scripts/kaggle_push.py pull  t2_source_only  # download outputs
+python scripts/kaggle_queue.py <names...>           # queue respecting the 2-GPU-session limit
 ```
 
-## Reproducibility rules (assignment requirements)
+Notes for reproducing on Kaggle: attach the datasets (PACS export, CIFAR-10/100
+mirrors, STL-10 binary files) as inputs; dataset mounts may appear either under
+`/kaggle/input/<slug>` or `/kaggle/input/datasets/<owner>/<slug>` and the
+kernels discover both layouts.
 
-* seed **6304** everywhere (`common/seed.py`);
-* one committed split file reused by Tasks 2 and 3;
-* frozen BatchNorm running statistics for every Task 2/3 method;
-* checkpoint selection only on mean source-validation macro-F1;
-* target labels are read only in `evaluate_final` / final analyses;
-* every reported number must come from a saved JSON/CSV under `results/`.
+## Reproducibility and evidence discipline
+
+* seed **6304** for every split, initialisation and comparison;
+* committed frozen splits reused across methods and tasks
+  (`shared/splits/pacs_sketch_seed6304.json`, `task4/data/splits/cifar10_seed6304.json`,
+  `task1/data/subsets_stl10_seed6304.json`);
+* BatchNorm running statistics frozen at pretrained values for all Task 2/3
+  methods; checkpoints selected only on mean source-validation macro-F1;
+* target labels read only in the final evaluation scripts; Task 3 never loads
+  Sketch during training or selection; Task 4 thresholds calibrated on known
+  validation data only;
+* alignment objectives consume L2-normalised features (see
+  `docs/methods_notes.md` for the frozen-BN scale-instability evidence);
+* every reported number comes from `results/<run_id>/`; run configurations and
+  commit hashes are stored with each result.
 
 ## Attribution
 
-External code is only used through public libraries (PyTorch / torchvision,
-scikit-learn, matplotlib). Method implementations (MMD, gradient reversal,
-CDAN conditioning) were written for this assignment from the papers listed in
-the handout; add explicit notes here if any snippet is adapted later.
+Method implementations were written for this assignment from the referenced
+papers (DAN/MMD, DANN/GRL, CDAN, SAM, PROSER, AdaIN cue conflicts). Public
+libraries used: PyTorch/torchvision, OpenCLIP, scikit-learn, matplotlib, PyYAML.
+Generated artefacts (datasets, checkpoints, caches, Kaggle working copies) are
+excluded from git via `.gitignore`.

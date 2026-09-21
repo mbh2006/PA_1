@@ -1,17 +1,24 @@
-# --- data and checkpoints never go into git ---
+# --- datasets and model checkpoints never go into git ---
 /data/
-task1/data/cue_conflicts/
-task1/data/fake_conflicts/
-task1/cache/
-task1/cache_smoke/
-task4/cache/
-task4/cache_smoke/
 checkpoints/
 checkpoints_smoke/
-results_smoke/
-kaggle_outputs/
 *.pth
 *.pt
+
+# --- per-task generated artefacts (regenerable; see README) ---
+task1/cache/
+task1/cache_smoke/
+task1/data/cue_conflicts/*.png        # generated conflict images (manifest.json is kept)
+task1/data/fake_conflicts/
+task1/data/subsets_fake_*.json
+task4/cache/
+task4/cache_smoke/
+
+# --- smoke-test outputs ---
+results_smoke/
+
+# --- Kaggle working copies (outputs are curated into results/) ---
+kaggle_outputs/
 
 # --- course handout: do not redistribute ---
 ATML-PA1.pdf

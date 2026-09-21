@@ -1,0 +1,93 @@
+{
+  "pairs": {
+    "airplane_content_bird_style": {
+      "content_class": "airplane",
+      "style_class": "bird",
+      "candidates": 55,
+      "accepted": 19,
+      "rejected": 36
+    },
+    "bird_content_airplane_style": {
+      "content_class": "bird",
+      "style_class": "airplane",
+      "candidates": 55,
+      "accepted": 12,
+      "rejected": 43
+    },
+    "car_content_cat_style": {
+      "content_class": "car",
+      "style_class": "cat",
+      "candidates": 55,
+      "accepted": 13,
+      "rejected": 42
+    },
+    "cat_content_car_style": {
+      "content_class": "cat",
+      "style_class": "car",
+      "candidates": 55,
+      "accepted": 29,
+      "rejected": 26
+    },
+    "deer_content_dog_style": {
+      "content_class": "deer",
+      "style_class": "dog",
+      "candidates": 55,
+      "accepted": 18,
+      "rejected": 37
+    },
+    "dog_content_deer_style": {
+      "content_class": "dog",
+      "style_class": "deer",
+      "candidates": 55,
+      "accepted": 32,
+      "rejected": 23
+    },
+    "horse_content_monkey_style": {
+      "content_class": "horse",
+      "style_class": "monkey",
+      "candidates": 55,
+      "accepted": 30,
+      "rejected": 25
+    },
+    "monkey_content_horse_style": {
+      "content_class": "monkey",
+      "style_class": "horse",
+      "candidates": 55,
+      "accepted": 22,
+      "rejected": 33
+    },
+    "ship_content_truck_style": {
+      "content_class": "ship",
+      "style_class": "truck",
+      "candidates": 55,
+      "accepted": 19,
+      "rejected": 36
+    },
+    "truck_content_ship_style": {
+      "content_class": "truck",
+      "style_class": "ship",
+      "candidates": 55,
+      "accepted": 20,
+      "rejected": 35
+    },
+    "bird_content_monkey_style": {
+      "content_class": "bird",
+      "style_class": "monkey",
+      "candidates": 55,
+      "accepted": 21,
+      "rejected": 34
+    },
+    "monkey_content_bird_style": {
+      "content_class": "monkey",
+      "style_class": "bird",
+      "candidates": 55,
+      "accepted": 28,
+      "rejected": 27
+    }
+  },
+  "threshold": 0.35,
+  "seed": 6304,
+  "total_accepted": 263,
+  "total_rejected": 397,
+  "rejection_rule": "structure correlation >= 0.35 AND LAB statistics closer to style than content"
+}
