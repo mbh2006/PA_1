@@ -8,7 +8,8 @@ checkpoints_smoke/
 # --- per-task generated artefacts (regenerable; see README) ---
 task1/cache/
 task1/cache_smoke/
-task1/data/cue_conflicts/*.png        # generated conflict images (manifest.json is kept)
+# generated cue-conflict images; the accepted/rejected manifest is kept
+task1/data/cue_conflicts/*.png
 task1/data/fake_conflicts/
 task1/data/subsets_fake_*.json
 task4/cache/
