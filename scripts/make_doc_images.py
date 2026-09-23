@@ -29,6 +29,7 @@ from __future__ import annotations
 import argparse
 import shutil
 import sys
+import time
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Tuple
 
@@ -62,10 +63,23 @@ def load_json(path: Path):
         return json.load(fh)
 
 
+def _write_with_retry(write, *args, retries: int = 4, delay: float = 1.0, **kwargs) -> None:
+    """Run ``write`` retrying on transient OSErrors (file-watchers, indexers)."""
+    for attempt in range(retries):
+        try:
+            write(*args, **kwargs)
+            return
+        except OSError as exc:
+            if attempt == retries - 1:
+                raise
+            print("retrying write:", exc)
+            time.sleep(delay)
+
+
 def save(fig, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.tight_layout()
-    fig.savefig(path)
+    _write_with_retry(fig.savefig, path)
     plt.close(fig)
     print("wrote", path.relative_to(ROOT))
 
@@ -76,42 +90,60 @@ def copy_if(src: Path, dst: Path) -> None:
         print("skip (missing):", src.relative_to(ROOT) if src.is_relative_to(ROOT) else src)
         return
     dst.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(src, dst)
+    _write_with_retry(shutil.copy2, src, dst)
     print("copied", dst.relative_to(ROOT))
 
 
 # --------------------------------------------------------------------------- task 1
+STL10_CLASSES = ["airplane", "bird", "car", "cat", "deer",
+                 "dog", "horse", "monkey", "ship", "truck"]
+
+
+def load_stl10_train(stl10_root: Path):
+    """Read the official STL-10 train split from its binary files.
+
+    Mirrors ``torchvision.datasets.STL10`` loading but requires only
+    ``stl10_binary/train_X.bin`` and ``train_y.bin`` (torchvision's integrity
+    check wants the 2.7 GB unlabeled set too, which the report figures do not
+    need).  Returns ``(images HWC uint8, labels 0-based, class names)``.
+    """
+    base = Path(stl10_root) / "stl10_binary"
+    images = np.fromfile(str(base / "train_X.bin"), dtype=np.uint8)
+    images = images.reshape(-1, 3, 96, 96).transpose(0, 1, 3, 2)
+    labels = np.fromfile(str(base / "train_y.bin"), dtype=np.uint8).astype(np.int64) - 1
+    names_file = base / "class_names.txt"
+    classes = names_file.read_text().split() if names_file.exists() else STL10_CLASSES
+    return images, labels, classes
+
+
 def sample_grid_stl10(stl10_root: Path, out: Path) -> None:
     try:
-        from torchvision.datasets import STL10
-        dataset = STL10(root=str(stl10_root), split="train", download=False)
+        images, labels, classes = load_stl10_train(stl10_root)
     except Exception as exc:  # dataset not present
         print("skip STL-10 sample grid:", exc)
         return
-    labels = np.array(dataset.labels)
     fig, axes = plt.subplots(3, 10, figsize=(16, 5.6))
     for column in range(10):
         indices = np.where(labels == column)[0][:3]
         for row in range(3):
-            image, _ = dataset[int(indices[row])]
-            axes[row, column].imshow(np.asarray(image))
+            picture = images[int(indices[row])].transpose(1, 2, 0)
+            axes[row, column].imshow(picture)
             axes[row, column].axis("off")
             if row == 0:
-                axes[row, column].set_title(dataset.classes[column], fontsize=9)
+                axes[row, column].set_title(classes[column], fontsize=9)
     fig.suptitle("STL-10: 3 samples per class (official train partition)")
     save(fig, out / "dataset_stl10_samples.png")
 
 
 def intervention_demo(stl10_root: Path, out: Path) -> None:
     try:
-        from torchvision.datasets import STL10
-        dataset = STL10(root=str(stl10_root), split="train", download=False)
+        images, _, _ = load_stl10_train(stl10_root)
     except Exception as exc:
         print("skip intervention demo:", exc)
         return
+    from PIL import Image
     from task1.data.interventions import grayscale, hue_rotate, patch_shuffle, translate
-    image, label = dataset[0]
-    image = image.resize((224, 224))
+    image = Image.fromarray(images[0].transpose(1, 2, 0)).resize((224, 224))
     variants = [
         ("clean", image),
         ("grayscale", grayscale(image)),
