@@ -24,6 +24,7 @@ Regenerate: `python -m task1.run_task1 --config task1/configs/base.yaml --stage 
 | Main table (source per-domain, mean, target, delta, separability) | `results/report_tables/task2_main_and_study.csv` |
 | Training / alignment-loss curves | `results/t2_*/curves_train.png`, `curves_val.png`, `history.csv` |
 | Per-class target changes + confusions | `results/t2_*/target_per_class.csv`, `target_confusions.csv` |
+| Concrete target examples (confident errors, fixed/broken vs ERM) | `results/t2_target_examples.csv` (from `target_outputs.npz`) |
 | Controlled study (lambda_MMD 0.1 / 1 / 10) | rows `t2_dan`, `t2_dan_lambda01`, `t2_dan_lambda10` in the table |
 | Target outputs for failure cases | `results/t2_*/target_outputs.npz` |
 
@@ -37,6 +38,7 @@ Regenerate: `python -m task1.run_task1 --config task1/configs/base.yaml --stage 
 | Training curves incl. MMD | `results/t3_dan_dg/curves_train.png`, `curves_val.png` |
 | Controlled study (rho 0.01 / 0.05 / 0.1) | rows `t3_sam`, `t3_sam_rho001`, `t3_sam_rho01` |
 | Per-class Sketch changes + failures vs Task 2 | `results/t3_*/target_per_class.csv`, `target_confusions.csv` |
+| Concrete Sketch examples (confident errors, fixed/broken vs ERM) | `results/t3_target_examples.csv` (from `target_outputs.npz`) |
 
 ## Task 4 - open-set recognition (CIFAR-10 vs CIFAR-100)
 
@@ -46,6 +48,7 @@ Regenerate: `python -m task1.run_task1 --config task1/configs/base.yaml --stage 
 | Vanilla / GCSC / PROSER table (CSA + OSR, MLS + placeholder) | `results/t4_osr/table_models.csv` |
 | Score-distribution / ROC figure | `results/t4_osr/roc_scores.png` |
 | >=3 near + >=3 far accepted failures (class, prediction, score, threshold) | `results/t4_osr/failure_near.csv`, `failure_far.csv` |
+| Score quantiles per split (known / near / far) | `results/t4_osr/score_summary.csv` |
 | PROSER calibration bias + placeholder score | `evaluate_osr` in `results/t4_osr/osr_metrics.json` |
 
 ## Cross-cutting
