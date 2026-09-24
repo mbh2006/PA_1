@@ -27,8 +27,7 @@ PA 0.pdf
 
 # --- working galleries and study notes: kept local, not part of the submission ---
 doc_image/
-GUIDE.md
-GUIDE_Instruction.md
+GUIDE*.md
 TASK*_REPORT_PACK.md
 
 # --- python / notebooks ---
