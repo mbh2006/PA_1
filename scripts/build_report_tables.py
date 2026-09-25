@@ -30,6 +30,26 @@ def load_json(path: Path):
         return json.load(fh)
 
 
+def source_mean_worst(metrics: Dict) -> Dict:
+    """Mean/worst source scores: stored values when present, derived otherwise.
+
+    Task 3 runs record ``source_mean_*``/``source_worst_*`` directly; the Task 2
+    ERM checkpoint reused as the Task 3 baseline only stores per-domain values,
+    so its row is derived from them (mean and minimum over the three domains).
+    """
+    keys = ("source_mean_accuracy", "source_mean_macro_f1", "source_worst_macro_f1")
+    if all(metrics.get(key) is not None for key in keys):
+        return {key: metrics[key] for key in keys}
+    source = metrics["source_validation"]
+    accuracies = [values["accuracy"] for values in source.values()]
+    f1_values = [values["macro_f1"] for values in source.values()]
+    return {
+        "source_mean_accuracy": sum(accuracies) / len(accuracies),
+        "source_mean_macro_f1": sum(f1_values) / len(f1_values),
+        "source_worst_macro_f1": min(f1_values),
+    }
+
+
 def write_csv(name: str, rows: List[Dict]) -> None:
     if not rows:
         return
@@ -85,9 +105,7 @@ def task3_table() -> List[Dict]:
         row = {
             "method": label,
             "run": run,
-            "source_mean_accuracy": metrics.get("source_mean_accuracy"),
-            "source_mean_macro_f1": metrics.get("source_mean_macro_f1"),
-            "source_worst_macro_f1": metrics.get("source_worst_macro_f1"),
+            **source_mean_worst(metrics),
             "target_accuracy": metrics["target"]["accuracy"],
             "target_macro_f1": metrics["target"]["macro_f1"],
             "source_domain_separability": separability.get("score"),
@@ -111,9 +129,7 @@ def task3_table() -> List[Dict]:
         rows.append({
             "method": f"{run} (study)",
             "run": run,
-            "source_mean_accuracy": metrics.get("source_mean_accuracy"),
-            "source_mean_macro_f1": metrics.get("source_mean_macro_f1"),
-            "source_worst_macro_f1": metrics.get("source_worst_macro_f1"),
+            **source_mean_worst(metrics),
             "target_accuracy": metrics["target"]["accuracy"],
             "target_macro_f1": metrics["target"]["macro_f1"],
             "source_domain_separability": separability.get("score"),

@@ -63,6 +63,20 @@ def load_json(path: Path):
         return json.load(fh)
 
 
+def source_mean_worst(metrics: Dict) -> Dict[str, float]:
+    """Mean/worst source macro-F1; derived from per-domain values if absent.
+
+    Task 3 runs store both values; the Task 2 ERM checkpoint reused as the
+    Task 3 baseline stores only per-domain metrics, so the figure must derive
+    them the same way the report table does.
+    """
+    if metrics.get("source_mean_macro_f1") is not None:
+        return {"mean": metrics["source_mean_macro_f1"],
+                "worst": metrics["source_worst_macro_f1"]}
+    per_domain = [values["macro_f1"] for values in metrics["source_validation"].values()]
+    return {"mean": sum(per_domain) / len(per_domain), "worst": min(per_domain)}
+
+
 def _write_with_retry(write, *args, retries: int = 4, delay: float = 1.0, **kwargs) -> None:
     """Run ``write`` retrying on transient OSErrors (file-watchers, indexers)."""
     for attempt in range(retries):
@@ -370,8 +384,9 @@ def build_task3(out: Path, args) -> None:
     if not entries:
         return
     labels = [entry[0] for entry in entries]
-    mean_source = [entry[1].get("source_mean_macro_f1", np.nan) for entry in entries]
-    worst_source = [entry[1].get("source_worst_macro_f1", np.nan) for entry in entries]
+    source_stats = [source_mean_worst(entry[1]) for entry in entries]
+    mean_source = [stats["mean"] for stats in source_stats]
+    worst_source = [stats["worst"] for stats in source_stats]
     sketch_acc = [entry[1]["target"]["accuracy"] for entry in entries]
     sketch_f1 = [entry[1]["target"]["macro_f1"] for entry in entries]
     separability = []
