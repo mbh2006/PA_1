@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import shutil
+import time
 from pathlib import Path
 
 import matplotlib
@@ -27,6 +28,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ANALYSIS = ROOT / "results" / "task1" / "analysis.json"
 RESULTS_FIGURE = ROOT / "results" / "task1" / "translation_curve.png"
 GALLERY_FIGURE = ROOT / "doc_image" / "task1" / "translation_curve.png"
+REPORT_FIGURE = ROOT / "report" / "figures" / "task1_translation_curve.png"
 
 DIRECTIONS = ["left", "right", "up", "down"]
 PREDICTORS = ["resnet50", "vit_b16", "clip_vit_b32"]
@@ -69,6 +71,20 @@ def build_series(analysis: dict) -> dict:
     return series
 
 
+def _copy_with_retry(source: Path, destination: Path, retries: int = 4,
+                     delay: float = 1.0) -> None:
+    """Copy retrying on transient OSErrors (file watchers, indexers)."""
+    for attempt in range(retries):
+        try:
+            shutil.copy2(source, destination)
+            return
+        except OSError as exc:
+            if attempt == retries - 1:
+                raise
+            print("retrying copy:", exc)
+            time.sleep(delay)
+
+
 def main() -> None:
     analysis = json.loads(ANALYSIS.read_text(encoding="utf-8"))
     series = build_series(analysis)
@@ -96,8 +112,12 @@ def main() -> None:
     print("wrote", RESULTS_FIGURE.relative_to(ROOT))
 
     GALLERY_FIGURE.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(RESULTS_FIGURE, GALLERY_FIGURE)
+    _copy_with_retry(RESULTS_FIGURE, GALLERY_FIGURE)
     print("copied", GALLERY_FIGURE.relative_to(ROOT))
+
+    REPORT_FIGURE.parent.mkdir(parents=True, exist_ok=True)
+    _copy_with_retry(RESULTS_FIGURE, REPORT_FIGURE)
+    print("copied", REPORT_FIGURE.relative_to(ROOT))
 
 
 if __name__ == "__main__":
