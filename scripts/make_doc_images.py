@@ -582,7 +582,12 @@ def failure_gallery(cache_dir: Path, data_root: Path, out: Path) -> None:
         cache = {key: data[key] for key in data.files}
     known = int(cache["num_known"])
     tau = threshold_at_percentile(mls(cache["logits_val"][:, :known]), 95.0)
-    fig, axes = plt.subplots(2, 3, figsize=(12, 8.4))
+    def signed(value: float) -> str:
+        return ("−" if value < 0 else "") + f"{abs(value):.2f}"
+
+    fig, axes = plt.subplots(2, 3, figsize=(12, 8.8))
+    fig.subplots_adjust(left=0.105, right=0.985, top=0.87, bottom=0.09,
+                        wspace=0.04, hspace=0.22)
     for row, group in enumerate(["near", "far"]):
         dataset = Cifar100Unknowns(str(data_root), group, None)
         logits = cache[f"logits_{group}"][:, :known]
@@ -592,18 +597,37 @@ def failure_gallery(cache_dir: Path, data_root: Path, out: Path) -> None:
         for column, position in enumerate(order):
             image, fine_label = dataset.base[dataset.indices[position]]
             predicted = int(logits[position].argmax())
-            fine_name = dataset.label_names[fine_label]
+            fine_name = dataset.label_names[fine_label].replace("_", " ")
             axis = axes[row, column]
             axis.imshow(np.asarray(image))
             axis.axis("off")
-            axis.set_title(f"{fine_name} -> {CIFAR10_CLASSES[predicted]}\n"
-                           f"score {unknownness[position]:.2f} <= tau {tau:.2f}", fontsize=8)
-    axes[0, 0].annotate("NEAR", xy=(-0.15, 0.5), xycoords="axes fraction", rotation=90,
-                        fontsize=12, va="center")
-    axes[1, 0].annotate("FAR", xy=(-0.15, 0.5), xycoords="axes fraction", rotation=90,
-                        fontsize=12, va="center")
-    fig.suptitle("Incorrectly accepted unknowns (vanilla MLS, most confident first)")
-    save(fig, out / "failure_gallery.png")
+            axis.text(0.5, 1.16, f"{fine_name} → {CIFAR10_CLASSES[predicted]}",
+                      transform=axis.transAxes, ha="center", va="bottom",
+                      fontsize=13, fontweight="bold")
+            axis.text(0.5, 1.045,
+                      f"u = {signed(float(unknownness[position]))}    ≤    τ = {signed(float(tau))}",
+                      transform=axis.transAxes, ha="center", va="bottom",
+                      fontsize=11.5, color="#333333")
+    axes[0, 0].text(-0.11, 0.5, "Near unknowns", transform=axes[0, 0].transAxes,
+                    ha="center", va="center", fontsize=12, fontweight="bold")
+    axes[1, 0].text(-0.11, 0.5, "Far unknowns", transform=axes[1, 0].transAxes,
+                    ha="center", va="center", fontsize=12, fontweight="bold")
+    fig.suptitle("Incorrectly accepted unknowns — vanilla model, MLS score "
+                 "(most confident first)", fontsize=14, fontweight="bold", y=0.965)
+    fig.text(0.5, 0.048,
+             "u = −max logit for the predicted known class (lower = more confidently "
+             "accepted); τ = 95th percentile of known-validation scores.",
+             ha="center", fontsize=10)
+    fig.text(0.5, 0.014,
+             "All shown images satisfy u ≤ τ, yet their true class is an unknown; "
+             "near/far groups are CIFAR-100 classes close to / distant from the knowns.",
+             ha="center", fontsize=10)
+    out_path = out / "failure_gallery.png"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    _write_with_retry(fig.savefig, out_path, dpi=200)
+    plt.close(fig)
+    print("wrote", out_path.relative_to(ROOT))
+    copy_if(out_path, ROOT / "report" / "figures" / "task4_failure_gallery.png")
 
 
 def build_task4(out: Path, args) -> None:
