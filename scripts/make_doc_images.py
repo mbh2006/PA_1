@@ -568,7 +568,85 @@ def osr_metric_bars(cache_dir: Path, out: Path) -> None:
     save(fig, out / "posthoc_score_bars.png")
 
 
+def _verify_failure_gallery(figure, image_axes, label_axes, text_axes, expected_texts,
+                            tau_text) -> None:
+    """Programmatic pre-save checks for the failure gallery (raises on failure)."""
+    figure.canvas.draw()
+    renderer = figure.canvas.get_renderer()
+    width, height = figure.canvas.get_width_height()
+    problems = []
+
+    def extent(artist):
+        return artist.get_window_extent(renderer=renderer)
+
+    # 1. no text may be clipped outside the canvas
+    for text in figure.findobj(match=plt.Text):
+        box = extent(text)
+        if box.x0 < -1 or box.y0 < -1 or box.x1 > width + 1 or box.y1 > height + 1:
+            problems.append(f"text outside canvas: {text.get_text()!r}")
+
+    # 2. row labels must not overlap any image axes
+    for label_axis in label_axes:
+        label_box = extent(label_axis)
+        for image_axis in image_axes:
+            image_box = extent(image_axis)
+            overlap_x = min(label_box.x1, image_box.x1) - max(label_box.x0, image_box.x0)
+            overlap_y = min(label_box.y1, image_box.y1) - max(label_box.y0, image_box.y0)
+            if overlap_x > 0 and overlap_y > 0:
+                problems.append("row label overlaps an image axes")
+
+    # 3. row labels vertically centred on their image row
+    for row, label_axis in enumerate(label_axes):
+        row_axes = image_axes[3 * row:3 * row + 3]
+        row_centre = sum(extent(axis).y0 + extent(axis).height / 2 for axis in row_axes) / 3
+        label_centre = extent(label_axis).y0 + extent(label_axis).height / 2
+        if abs(row_centre - label_centre) > 2:
+            problems.append(f"row label {row} is not centred on its image row")
+
+    # 4. near examples in the top row, far examples below
+    near_centre = sum(extent(axis).y0 for axis in image_axes[:3]) / 3
+    far_centre = sum(extent(axis).y0 for axis in image_axes[3:]) / 3
+    if near_centre <= far_centre:
+        problems.append("near examples are not in the top row")
+
+    # 5. displayed labels match the displayed samples; tau appears in every score
+    actual = [tuple(text.get_text() for text in axis.texts) for axis in text_axes]
+    if actual != [tuple(pair) for pair in expected_texts]:
+        problems.append("panel labels do not match the displayed samples")
+    for _, score_text in expected_texts:
+        if tau_text not in score_text:
+            problems.append(f"score line missing the calibrated tau: {score_text!r}")
+
+    # 6. all image panels have identical dimensions
+    boxes = [extent(axis) for axis in image_axes]
+    for box in boxes[1:]:
+        if abs(box.width - boxes[0].width) > 0.5 or abs(box.height - boxes[0].height) > 0.5:
+            problems.append("image panels do not have identical dimensions")
+
+    # 7. panel texts must not collide with each other
+    panel_texts = [text for axis in text_axes for text in axis.texts]
+    for i, first in enumerate(panel_texts):
+        for second in panel_texts[i + 1:]:
+            box_a, box_b = extent(first), extent(second)
+            overlap_x = min(box_a.x1, box_b.x1) - max(box_a.x0, box_b.x0)
+            overlap_y = min(box_a.y1, box_b.y1) - max(box_a.y0, box_b.y0)
+            if overlap_x > 0 and overlap_y > 0:
+                problems.append(f"panel texts overlap: {first.get_text()!r}")
+
+    if problems:
+        raise SystemExit("failure gallery layout check failed:\n  " + "\n  ".join(problems))
+    print(f"failure gallery layout checks: OK ({len(image_axes)} image panels, "
+          f"{len(label_axes)} row labels)")
+
+
 def failure_gallery(cache_dir: Path, data_root: Path, out: Path) -> None:
+    """Accepted-unknown gallery, 2x3 (near unknowns top, far unknowns bottom).
+
+    Visualization only: samples, predictions, scores, threshold and ordering are
+    identical to the evaluation. The layout uses a dedicated row-label column and
+    a text band above each image row, so class titles and score lines can never
+    resize or overlap the images.
+    """
     path = cache_dir / "t4_vanilla.npz"
     if not path.exists():
         print("skip failure gallery: cache missing")
@@ -581,51 +659,69 @@ def failure_gallery(cache_dir: Path, data_root: Path, out: Path) -> None:
     with np.load(path, allow_pickle=True) as data:
         cache = {key: data[key] for key in data.files}
     known = int(cache["num_known"])
-    tau = threshold_at_percentile(mls(cache["logits_val"][:, :known]), 95.0)
+    tau = float(threshold_at_percentile(mls(cache["logits_val"][:, :known]), 95.0))
+
     def signed(value: float) -> str:
         return ("−" if value < 0 else "") + f"{abs(value):.2f}"
 
-    fig, axes = plt.subplots(2, 3, figsize=(12, 8.8))
-    fig.subplots_adjust(left=0.105, right=0.985, top=0.87, bottom=0.09,
-                        wspace=0.04, hspace=0.22)
-    for row, group in enumerate(["near", "far"]):
+    tau_text = f"τ = {signed(tau)}"
+    groups = [("near", "Near unknowns"), ("far", "Far unknowns")]
+
+    # explicit margins via GridSpec (never tight_layout): one narrow label column
+    # and a text band above each image row
+    figure = plt.figure(figsize=(7.0, 4.8))
+    grid = figure.add_gridspec(
+        4, 4, width_ratios=[0.6, 1.0, 1.0, 1.0], height_ratios=[0.50, 1.0, 0.50, 1.0],
+        left=0.03, right=0.975, top=0.90, bottom=0.085, wspace=0.25, hspace=0.12)
+
+    image_axes, label_axes, text_axes, expected_texts = [], [], [], []
+    for row, (group, row_label) in enumerate(groups):
         dataset = Cifar100Unknowns(str(data_root), group, None)
         logits = cache[f"logits_{group}"][:, :known]
         unknownness = mls(logits)
         accepted = np.where(unknownness <= tau)[0]
         order = accepted[np.argsort(unknownness[accepted])][:3]
+
+        label_axis = figure.add_subplot(grid[2 * row + 1, 0])
+        label_axis.axis("off")
+        label_axis.text(0.5, 0.5, row_label, ha="center", va="center",
+                        fontsize=11, fontweight="bold", rotation=0)
+        label_axes.append(label_axis)
+
         for column, position in enumerate(order):
             image, fine_label = dataset.base[dataset.indices[position]]
             predicted = int(logits[position].argmax())
-            fine_name = dataset.label_names[fine_label].replace("_", " ")
-            axis = axes[row, column]
+            class_text = (f"{dataset.label_names[fine_label].replace('_', ' ')}"
+                          f" → {CIFAR10_CLASSES[predicted]}")
+            score_text = f"u = {signed(float(unknownness[position]))} ≤ {tau_text}"
+
+            text_axis = figure.add_subplot(grid[2 * row, column + 1])
+            text_axis.axis("off")
+            text_axis.text(0.5, 0.72, class_text, ha="center", va="center",
+                           fontsize=12, fontweight="bold")
+            text_axis.text(0.5, 0.20, score_text, ha="center", va="center",
+                           fontsize=10.5, color="#333333")
+            text_axes.append(text_axis)
+            expected_texts.append((class_text, score_text))
+
+            axis = figure.add_subplot(grid[2 * row + 1, column + 1])
             axis.imshow(np.asarray(image))
             axis.axis("off")
-            axis.text(0.5, 1.16, f"{fine_name} → {CIFAR10_CLASSES[predicted]}",
-                      transform=axis.transAxes, ha="center", va="bottom",
-                      fontsize=13, fontweight="bold")
-            axis.text(0.5, 1.045,
-                      f"u = {signed(float(unknownness[position]))}    ≤    τ = {signed(float(tau))}",
-                      transform=axis.transAxes, ha="center", va="bottom",
-                      fontsize=11.5, color="#333333")
-    axes[0, 0].text(-0.11, 0.5, "Near unknowns", transform=axes[0, 0].transAxes,
-                    ha="center", va="center", fontsize=12, fontweight="bold")
-    axes[1, 0].text(-0.11, 0.5, "Far unknowns", transform=axes[1, 0].transAxes,
-                    ha="center", va="center", fontsize=12, fontweight="bold")
-    fig.suptitle("Incorrectly accepted unknowns — vanilla model, MLS score "
-                 "(most confident first)", fontsize=14, fontweight="bold", y=0.965)
-    fig.text(0.5, 0.048,
-             "u = −max logit for the predicted known class (lower = more confidently "
-             "accepted); τ = 95th percentile of known-validation scores.",
-             ha="center", fontsize=10)
-    fig.text(0.5, 0.014,
-             "All shown images satisfy u ≤ τ, yet their true class is an unknown; "
-             "near/far groups are CIFAR-100 classes close to / distant from the knowns.",
-             ha="center", fontsize=10)
+            image_axes.append(axis)
+
+    figure.suptitle("Confidently accepted unknowns — Vanilla, MLS",
+                    fontsize=13, fontweight="bold", x=0.5, y=0.965)
+    figure.text(0.5, 0.025,
+                "Lower u = more confidently accepted; τ is calibrated on known "
+                "validation data.", ha="center", fontsize=9)
+
+    _verify_failure_gallery(figure, image_axes, label_axes, text_axes,
+                            expected_texts, tau_text)
+
     out_path = out / "failure_gallery.png"
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    _write_with_retry(fig.savefig, out_path, dpi=200)
-    plt.close(fig)
+    _write_with_retry(figure.savefig, out_path, dpi=300)
+    plt.close(figure)
     print("wrote", out_path.relative_to(ROOT))
     copy_if(out_path, ROOT / "report" / "figures" / "task4_failure_gallery.png")
 
