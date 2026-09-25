@@ -352,11 +352,23 @@ def stage_analysis(cfg, args, subsets) -> None:
             metrics_zero["consistency"] = 1.0
             report["conditions"]["clean"][f"{name}_zero_shot"] = metrics_zero
 
-        # translation curve: average over directions
+        # translation curve: average over directions; 0 px anchors the curve at
+        # the clean baseline (identity translation) for every predictor
+        report["translation"].setdefault(name, {})["0"] = {
+            "accuracy": float(clean_metrics["accuracy"]),
+            "consistency": 1.0,
+            "cosine_stability": 1.0,
+        }
+        if clip_data is not None and name == "clip_vit_b32":
+            report["translation"].setdefault(f"{name}_zero_shot", {})["0"] = {
+                "accuracy": float(report["conditions"]["clean"][f"{name}_zero_shot"]["accuracy"]),
+                "consistency": 1.0,
+            }
         for pixels in TRANSLATION_DISPLACEMENTS:
             if pixels == 0:
                 continue
             accuracies, consistencies, stabilities = [], [], []
+            zero_accuracies, zero_consistencies = [], []
             for direction in TRANSLATION_DIRECTIONS:
                 condition = f"translate_{direction}_{pixels}"
                 path = cache_dir / f"{name}_{condition}.npz"
@@ -369,11 +381,24 @@ def stage_analysis(cfg, args, subsets) -> None:
                 accuracies.append(classification_metrics(logits, clean_labels, num_classes)["accuracy"])
                 consistencies.append(prediction_consistency(clean_logits, logits))
                 stabilities.append(cosine_stability(clean_features, features))
+                if clip_data is not None and name == "clip_vit_b32":
+                    scale = float(clip_data["scale"])
+                    text = clip_data["text_features"]
+                    zero_shot = scale * (features @ text.T)
+                    zero_clean = scale * (clean_features @ text.T)
+                    zero_accuracies.append(
+                        classification_metrics(zero_shot, clean_labels, num_classes)["accuracy"])
+                    zero_consistencies.append(prediction_consistency(zero_clean, zero_shot))
             if accuracies:
                 report["translation"].setdefault(name, {})[str(pixels)] = {
                     "accuracy": float(np.mean(accuracies)),
                     "consistency": float(np.mean(consistencies)),
                     "cosine_stability": float(np.mean(stabilities)),
+                }
+            if zero_accuracies:
+                report["translation"].setdefault(f"{name}_zero_shot", {})[str(pixels)] = {
+                    "accuracy": float(np.mean(zero_accuracies)),
+                    "consistency": float(np.mean(zero_consistencies)),
                 }
 
         # cue conflicts: head (trained) and CLIP zero-shot
@@ -414,23 +439,28 @@ def stage_analysis(cfg, args, subsets) -> None:
                         subsets["classes"], out_dir / f"tsne_{name}_{condition}.png",
                         title=f"{name}: clean vs {condition}", seed=cfg["seed"])
 
-    # translation curve plot
+    # translation curve plot: accuracy and consistency side by side, every
+    # predictor anchored at 0 px (clean) and averaged over the four directions
     try:
         import matplotlib
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
-        figure, axis = plt.subplots(figsize=(7, 4.5))
+        figure, axes = plt.subplots(1, 2, figsize=(11.5, 4.2), sharex=True)
         for name, curve in report["translation"].items():
             xs = sorted(int(k) for k in curve)
-            axis.plot(xs, [curve[str(x)]["accuracy"] for x in xs], marker="o", label=f"{name} accuracy")
-            axis.plot(xs, [curve[str(x)]["consistency"] for x in xs], marker="s", linestyle="--",
-                      label=f"{name} consistency")
-        axis.set_xlabel("displacement (px)")
-        axis.set_ylabel("value")
-        axis.set_title("translation curve (averaged over directions)")
-        axis.grid(alpha=0.3)
-        axis.legend(fontsize=8)
-        figure.tight_layout()
+            label = name.replace("clip_vit_b32", "clip")
+            axes[0].plot(xs, [curve[str(x)]["accuracy"] for x in xs], marker="o", label=label)
+            axes[1].plot(xs, [curve[str(x)]["consistency"] for x in xs], marker="s", label=label)
+        ticks = sorted({int(k) for curve in report["translation"].values() for k in curve})
+        for axis, title in zip(axes, ("accuracy", "prediction consistency")):
+            axis.set_title(title)
+            axis.set_xlabel("displacement (px)")
+            axis.set_ylabel("value")
+            axis.set_xticks(ticks)
+            axis.grid(alpha=0.3)
+            axis.legend(fontsize=8)
+        figure.suptitle("translation curve (averaged over directions; 0 px = clean)")
+        figure.tight_layout(rect=(0, 0, 1, 0.95))
         figure.savefig(out_dir / "translation_curve.png", dpi=150)
         plt.close(figure)
     except Exception as exc:
