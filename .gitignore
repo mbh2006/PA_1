@@ -45,3 +45,7 @@ runs/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# --- local report upload bundle (copy of report materials, not part of the submission) ---
+report_bundle/
+report_bundle.zip
